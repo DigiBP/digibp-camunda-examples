@@ -15,6 +15,7 @@
     <version>1.0.0</version>
     <modules>
         <module>message-flow</module>
+        <module>message-flow-java</module>
     </modules>
 
 

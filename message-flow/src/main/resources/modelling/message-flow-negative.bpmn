@@ -18,15 +18,22 @@
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1yg5p13" sourceRef="StartEvent_1" targetRef="IntermediateThrowEvent_0ab6xmf" />
     <bpmn:sequenceFlow id="SequenceFlow_1llwxds" sourceRef="IntermediateThrowEvent_14wyrlw" targetRef="Task_153wbtr" />
-    <bpmn:sequenceFlow id="SequenceFlow_03bykkn" sourceRef="Task_153wbtr" targetRef="ExclusiveGateway_1lfzvja" />
-    <bpmn:sequenceFlow id="SequenceFlow_1lw9ccm" name="Yes" sourceRef="ExclusiveGateway_1lfzvja" targetRef="EndEvent_0h4ry7z">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${idOK==true}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
     <bpmn:intermediateCatchEvent id="IntermediateThrowEvent_14wyrlw" name="Message from B received">
       <bpmn:incoming>SequenceFlow_161fvxj</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1llwxds</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_0j4pij7" />
     </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="EndEvent_0h4ry7z" name="Process A ended">
+      <bpmn:incoming>SequenceFlow_0rm2pa5</bpmn:incoming>
+      <bpmn:messageEventDefinition camunda:expression="${runtimeService.createMessageCorrelation(&#34;Message_A_ended_negative&#34;).setVariables(execution.getVariables()).correlateWithResult()}" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_161fvxj" sourceRef="IntermediateThrowEvent_0ab6xmf" targetRef="IntermediateThrowEvent_14wyrlw" />
+    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_0ab6xmf" name="Send a message">
+      <bpmn:incoming>SequenceFlow_1yg5p13</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_161fvxj</bpmn:outgoing>
+      <bpmn:messageEventDefinition camunda:expression="${runtimeService.createMessageCorrelation(&#34;Message_A_B_negative&#34;).setVariables(execution.getVariables()).correlateWithResult()}" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0rm2pa5" sourceRef="Task_153wbtr" targetRef="EndEvent_0h4ry7z" />
     <bpmn:userTask id="Task_153wbtr" name="Do some work" camunda:assignee="demo" camunda:candidateUsers="demo">
       <bpmn:extensionElements>
         <camunda:formData>
@@ -36,29 +43,10 @@
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1llwxds</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_03bykkn</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0rm2pa5</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="SequenceFlow_135bghv" name="No" sourceRef="ExclusiveGateway_1lfzvja" targetRef="IntermediateThrowEvent_0ab6xmf">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${idOK==false}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_1lfzvja" name="Is OK?">
-      <bpmn:incoming>SequenceFlow_03bykkn</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1lw9ccm</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_135bghv</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="EndEvent_0h4ry7z" name="Process A ended">
-      <bpmn:incoming>SequenceFlow_1lw9ccm</bpmn:incoming>
-      <bpmn:messageEventDefinition camunda:expression="${runtimeService.createMessageCorrelation(&#34;Message_A_ended&#34;).setVariables(execution.getVariables()).correlateWithResult()}" />
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_161fvxj" sourceRef="IntermediateThrowEvent_0ab6xmf" targetRef="IntermediateThrowEvent_14wyrlw" />
-    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_0ab6xmf" name="Send a message">
-      <bpmn:incoming>SequenceFlow_135bghv</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_1yg5p13</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_161fvxj</bpmn:outgoing>
-      <bpmn:messageEventDefinition camunda:expression="${runtimeService.createMessageCorrelation(&#34;Message_A_B&#34;).setVariables(execution.getVariables()).correlateWithResult()}" />
-    </bpmn:intermediateThrowEvent>
   </bpmn:process>
-  <bpmn:process id="Process_B_negative" isExecutable="false">
+  <bpmn:process id="Process_B_negative" isExecutable="true">
     <bpmn:userTask id="Task_04cdz66" name="Do some work" camunda:assignee="demo" camunda:candidateUsers="demo">
       <bpmn:extensionElements>
         <camunda:formData>
@@ -101,17 +89,17 @@
     <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_0o1w764" name="Send a message">
       <bpmn:incoming>SequenceFlow_0qh38jg</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0qnpx1a</bpmn:outgoing>
-      <bpmn:messageEventDefinition camunda:expression="${runtimeService.createMessageCorrelation(&#34;Message_B_A&#34;).setVariables(execution.getVariables()).correlateWithResult()}" />
+      <bpmn:messageEventDefinition camunda:expression="${runtimeService.createMessageCorrelation(&#34;Message_B_A_negative&#34;).setVariables(execution.getVariables()).correlateWithResult()}" />
     </bpmn:intermediateThrowEvent>
   </bpmn:process>
-  <bpmn:message id="Message_135sw9c" name="Message_A_B" />
-  <bpmn:message id="Message_0j4pij7" name="Message_B_A" />
+  <bpmn:message id="Message_135sw9c" name="Message_A_B_negative" />
+  <bpmn:message id="Message_0j4pij7" name="Message_B_A_negative" />
   <bpmn:message id="Message_0ypjmuh" name="Message_A-B-2" />
-  <bpmn:message id="Message_1vf2ht9" name="Message_A_ended" />
+  <bpmn:message id="Message_1vf2ht9" name="Message_A_ended_negative" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_12zap17">
       <bpmndi:BPMNShape id="Participant_1wadqwr_di" bpmnElement="Participant_1wadqwr">
-        <dc:Bounds x="123" y="135" width="1171" height="181" />
+        <dc:Bounds x="123" y="185" width="1171" height="131" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="177" y="236" width="36" height="36" />
@@ -120,7 +108,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_0xe0rgh_di" bpmnElement="Participant_0xe0rgh">
-        <dc:Bounds x="123" y="368" width="1170" height="139" />
+        <dc:Bounds x="123" y="381" width="1170" height="126" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1yg5p13_di" bpmnElement="SequenceFlow_1yg5p13">
         <di:waypoint xsi:type="dc:Point" x="213" y="254" />
@@ -174,34 +162,14 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1llwxds_di" bpmnElement="SequenceFlow_1llwxds">
         <di:waypoint xsi:type="dc:Point" x="630" y="254" />
-        <di:waypoint xsi:type="dc:Point" x="701" y="254" />
+        <di:waypoint xsi:type="dc:Point" x="751" y="254" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="665.5" y="233" width="0" height="12" />
+          <dc:Bounds x="645.5" y="233" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_1iea6tm_di" bpmnElement="Task_153wbtr">
-        <dc:Bounds x="701" y="214" width="100" height="80" />
+        <dc:Bounds x="751" y="214" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ExclusiveGateway_1lfzvja_di" bpmnElement="ExclusiveGateway_1lfzvja" isMarkerVisible="true">
-        <dc:Bounds x="842" y="229" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="850" y="282" width="34" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_03bykkn_di" bpmnElement="SequenceFlow_03bykkn">
-        <di:waypoint xsi:type="dc:Point" x="801" y="254" />
-        <di:waypoint xsi:type="dc:Point" x="842" y="254" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="821.5" y="233" width="0" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_1lw9ccm_di" bpmnElement="SequenceFlow_1lw9ccm">
-        <di:waypoint xsi:type="dc:Point" x="892" y="254" />
-        <di:waypoint xsi:type="dc:Point" x="952" y="254" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="912.5" y="233" width="19" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_0a9bn9j_di" bpmnElement="EndEvent_0h4ry7z">
         <dc:Bounds x="952" y="236" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -244,15 +212,6 @@
       <bpmndi:BPMNShape id="UserTask_1a66seq_di" bpmnElement="Task_0qbdhwq">
         <dc:Bounds x="1057" y="401" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_135bghv_di" bpmnElement="SequenceFlow_135bghv">
-        <di:waypoint xsi:type="dc:Point" x="867" y="229" />
-        <di:waypoint xsi:type="dc:Point" x="867" y="176" />
-        <di:waypoint xsi:type="dc:Point" x="323" y="176" />
-        <di:waypoint xsi:type="dc:Point" x="323" y="236" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="588.4883303411132" y="155" width="14" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_161fvxj_di" bpmnElement="SequenceFlow_161fvxj">
         <di:waypoint xsi:type="dc:Point" x="341" y="254" />
         <di:waypoint xsi:type="dc:Point" x="594" y="254" />
@@ -279,6 +238,13 @@
           <dc:Bounds x="570" y="463" width="82" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0rm2pa5_di" bpmnElement="SequenceFlow_0rm2pa5">
+        <di:waypoint xsi:type="dc:Point" x="851" y="254" />
+        <di:waypoint xsi:type="dc:Point" x="952" y="254" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="901.5" y="233" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
