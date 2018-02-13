@@ -1,0 +1,17 @@
+<!--
+  ~ Copyright (c) 2018. University of Applied Sciences and Arts Northwestern Switzerland FHNW.
+  ~ All rights reserved.
+  -->
+
+<form>
+
+    <label for="image">Image:</label>
+
+    <!-- make sure the file is fetched. Alternative: use javascript -->
+    <input type="hidden" id="image"
+           cam-variable-name="image" />
+
+    <!-- set contentUrl as src of the image-->
+    <img src="{{ camForm.variableManager.variable('image').contentUrl }}"></img>
+
+</form>

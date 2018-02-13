@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ch.fhnw.digibp.examples</groupId>
-    <artifactId>listener-java</artifactId>
+    <artifactId>embedded-forms</artifactId>
     <version>1.0.0</version>
     <packaging>${packaging.type}</packaging>
 
