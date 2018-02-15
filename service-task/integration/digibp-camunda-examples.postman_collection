@@ -1,0 +1,218 @@
+{
+	"info": {
+		"name": "digibp-camunda-examples",
+		"_postman_id": "dd08f97e-9dc7-b407-85e6-03130e195b3e",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "service-task",
+			"description": "",
+			"item": [
+				{
+					"name": "putsreq.com",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "408e186d-6c8a-415d-b306-0408c77d2fbf",
+								"type": "text/javascript",
+								"exec": [
+									"// Camunda HTTP Connector JavaScript emulation:",
+									"var execution = new class Execution {",
+									"    constructor() {",
+									"        this.data = new Map()",
+									"    }",
+									"    getVariable(name) {",
+									"        return this.data.get(name);",
+									"    }",
+									"    setVariable(name, value) {",
+									"        this.data.set(name, value);",
+									"    }",
+									"    getProcessInstanceId() {",
+									"        return this.processInstanceId;",
+									"    }",
+									"    setProcessInstanceId(processInstanceId) {",
+									"        this.processInstanceId = processInstanceId;",
+									"    }",
+									"    getProcessBusinessKey() {",
+									"        return this.processBusinessKey;",
+									"    }",
+									"    setProcessBusinessKey(processBusinessKey) {",
+									"        this.processBusinessKey = processBusinessKey;",
+									"    }",
+									"}();",
+									"",
+									"// Camunda set process variables, process id and business key:",
+									"execution.setVariable(\"processVariableA\", \"Data A\");",
+									"execution.setVariable(\"processVariableB\", \"Data B\");",
+									"execution.setProcessInstanceId(100);",
+									"execution.setProcessBusinessKey(\"case-500\");",
+									"",
+									"// Camunda HTTP Connector YOUR Script:",
+									"var out = JSON.stringify({",
+									"    \"variableA\": execution.getVariable(\"processVariableA\"),",
+									"    \"variableB\": execution.getVariable(\"processVariableB\"),",
+									"    \"businessKey\": execution.getProcessBusinessKey()",
+									"});",
+									"",
+									"// Postman Body {{payload}}:",
+									"pm.variables.set(\"payload\", out);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "055f2126-1e70-4952-9847-ed1e0a7f7a18",
+								"type": "text/javascript",
+								"exec": [
+									"// Camunda HTTP Connector JavaScript emulation:",
+									"var connector = new class Connector {",
+									"    constructor() {",
+									"        try {",
+									"            this.data = new Map().set('response', JSON.stringify(pm.response.json()));",
+									"        } catch (error) {",
+									"            this.data = new Map().set('response', JSON.stringify('invalid json'));",
+									"        }",
+									"    }",
+									"",
+									"    getVariable(name) {",
+									"        return this.data.get(name);",
+									"    }",
+									"}();",
+									"",
+									"// Camunda HTTP Connector YOUR Script:",
+									"var body = JSON.parse(connector.getVariable(\"response\"));",
+									"",
+									"// Postman Test:",
+									"pm.test(\"Test variableA: \" + body.variableA, function() {",
+									"    pm.expect(body.variableA).to.include(\"ECHO\");",
+									"});",
+									"pm.test(\"Test variableB: \" + body.variableB, function() {",
+									"    pm.expect(body.variableB).to.include(\"ECHO\");",
+									"});",
+									"pm.test(\"Test businessKey: \" + body.businessKey, function() {",
+									"    pm.expect(body.businessKey).to.include(\"case-500\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{payload}}"
+						},
+						"url": {
+							"raw": "https://putsreq.com/RwkouWdakBRRUR00bdCj",
+							"protocol": "https",
+							"host": [
+								"putsreq",
+								"com"
+							],
+							"path": [
+								"RwkouWdakBRRUR00bdCj"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/api/echo/v1",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9b604449-f21e-47fb-9a54-7a56932d37f5",
+								"type": "text/javascript",
+								"exec": [
+									"// Camunda HTTP Connector JavaScript emulation:",
+									"eval(pm.environment.get(\"camunda\"));",
+									"",
+									"// Camunda set process variables, process id and business key:",
+									"execution.setVariable(\"processVariableA\", \"Data A\");",
+									"execution.setVariable(\"processVariableB\", \"Data B\");",
+									"execution.setProcessInstanceId(100);",
+									"execution.setProcessBusinessKey(\"case-500\");",
+									"",
+									"// Camunda HTTP Connector YOUR Script:",
+									"var out = JSON.stringify({",
+									"    \"variableA\": execution.getVariable(\"processVariableA\"),",
+									"    \"variableB\": execution.getVariable(\"processVariableB\"),",
+									"    \"businessKey\": execution.getProcessBusinessKey()",
+									"});",
+									"",
+									"// Postman Body {{payload}}:",
+									"payload.set(out);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "25cb0886-6387-4e55-9753-53b29d6d05cc",
+								"type": "text/javascript",
+								"exec": [
+									"// Camunda HTTP Connector JavaScript emulation:",
+									"eval(pm.environment.get(\"camunda\"));",
+									"",
+									"// Camunda HTTP Connector YOUR Script:",
+									"var body = JSON.parse(connector.getVariable(\"response\"));",
+									"",
+									"// Postman Test:",
+									"pm.test(\"Test variableA: \" + body.variableA, function() {",
+									"    pm.expect(body.variableA).to.include(\"ECHO\");",
+									"});",
+									"pm.test(\"Test variableB: \" + body.variableB, function() {",
+									"    pm.expect(body.variableB).to.include(\"ECHO\");",
+									"});",
+									"pm.test(\"Test businessKey: \" + body.businessKey, function() {",
+									"    pm.expect(body.businessKey).to.include(\"case-500\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{payload}}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/echo/v1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"echo",
+								"v1"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

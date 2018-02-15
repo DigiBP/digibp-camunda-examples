@@ -1,0 +1,28 @@
+cxf:
+  path: /api
+  servlet.init:
+    service-list-path: /info
+  jaxrs:
+    component-scan: true
+    classes-scan-packages: org.apache.cxf.jaxrs.swagger,com.fasterxml.jackson.jaxrs.json
+
+camunda:
+  bpm:
+    admin-user:
+      id: demo
+      password: demo
+    filter:
+      create: All Tasks
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/camunda
+    username: sa
+    password: sa
+#  h2:
+#    console:
+#      enabled: true
+#      path: /console
+
+#server:
+#  port: 8081
