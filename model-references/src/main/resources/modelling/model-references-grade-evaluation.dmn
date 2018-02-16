@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/1.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="definitions_grade_evaluation" name="Grade Evaluation" namespace="http://camunda.org/schema/1.0/dmn">
+  <decision id="Decision_overall_assessment" name="Overall assessment">
+    <extensionElements>
+      <biodi:bounds x="200" y="200" width="180" height="80" />
+      <biodi:edge source="Decision_grade_b_assessment">
+        <biodi:waypoints x="273" y="375" />
+        <biodi:waypoints x="313" y="280" />
+      </biodi:edge>
+    </extensionElements>
+    <informationRequirement>
+      <requiredDecision href="#Decision_grade_b_assessment" />
+    </informationRequirement>
+    <decisionTable hitPolicy="FIRST">
+      <input id="InputClause_0lza3in" label="Grade A" camunda:inputVariable="">
+        <inputExpression id="LiteralExpression_1rbh2bd" typeRef="long">
+          <text>gradeA</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1keyequ" label="Grade B" camunda:inputVariable="">
+        <inputExpression id="LiteralExpression_1w9ka0c" typeRef="string">
+          <text>gradeB</text>
+        </inputExpression>
+        <inputValues id="UnaryTests_0b8bvu5">
+          <text><![CDATA["passed","failed"]]></text>
+        </inputValues>
+      </input>
+      <output id="output_1" label="finalGrade" name="finalGrade" typeRef="string">
+        <outputValues id="UnaryTests_0bibqti">
+          <text><![CDATA["outstanding","average","fail"]]></text>
+        </outputValues>
+      </output>
+      <rule id="row-398753302-2">
+        <inputEntry id="UnaryTests_1brh2pu">
+          <text><![CDATA[>= 5.25]]></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1lpnry1">
+          <text><![CDATA["passed"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1qbiyl4">
+          <text><![CDATA["outstanding"]]></text>
+        </outputEntry>
+      </rule>
+      <rule id="row-398753302-1">
+        <inputEntry id="UnaryTests_0kk8xaq">
+          <text><![CDATA[>= 3.75]]></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0v7ilx2">
+          <text><![CDATA["passed"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0akx3lx">
+          <text><![CDATA["average"]]></text>
+        </outputEntry>
+      </rule>
+      <rule id="row-398753302-3">
+        <inputEntry id="UnaryTests_1wghlo9">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ui6v0g">
+          <text><![CDATA["failed"]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1m9bect">
+          <text><![CDATA["fail"]]></text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="Decision_grade_b_assessment" name="Grade B assessment">
+    <extensionElements>
+      <biodi:bounds x="166" y="375" width="180" height="80" />
+    </extensionElements>
+    <decisionTable id="DecisionTable_1sx8s4b" hitPolicy="FIRST">
+      <input id="InputClause_1kle4ea" label="Grade B part 1" camunda:inputVariable="">
+        <inputExpression id="LiteralExpression_08688q3" typeRef="long">
+          <text>gradeB1</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0onnwso" label="Grade B part 2" camunda:inputVariable="">
+        <inputExpression id="LiteralExpression_0q3rzz7" typeRef="long">
+          <text>gradeB2</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_1noko0e" label="Grade B" name="gradeB" typeRef="string">
+        <outputValues id="UnaryTests_1nomoe7">
+          <text><![CDATA["passed","failed"]]></text>
+        </outputValues>
+      </output>
+      <rule id="row-398753302-4">
+        <inputEntry id="UnaryTests_0pezrf1">
+          <text><![CDATA[>= 3.75]]></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1gcyglo">
+          <text><![CDATA[>= 3.75]]></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1m4d19a">
+          <text><![CDATA["passed"]]></text>
+        </outputEntry>
+      </rule>
+      <rule id="row-398753302-5">
+        <inputEntry id="UnaryTests_15cryym">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1uiaiax">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1uoancv">
+          <text><![CDATA["failed"]]></text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>

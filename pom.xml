@@ -21,6 +21,7 @@
         <module>embedded-forms</module>
         <module>service-task</module>
         <module>rest-api</module>
+        <module>model-references</module>
     </modules>
 
 
