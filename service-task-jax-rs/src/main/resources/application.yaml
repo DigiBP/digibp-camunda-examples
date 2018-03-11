@@ -1,11 +1,3 @@
-cxf:
-  path: /api
-  servlet.init:
-    service-list-path: /info
-  jaxrs:
-    component-scan: true
-    classes-scan-packages: org.apache.cxf.jaxrs.swagger,com.fasterxml.jackson.jaxrs.json
-
 camunda:
   bpm:
     admin-user:
@@ -38,9 +30,3 @@ spring:
   #    url: jdbc:postgresql://<host>:<port>/<dbname>?user=<username>&password=<password>&sslmode=require
   #    username: <username>
   #    password: <password>
-
-## Copy to application-local.yaml and uncomment the following lines to work with service keys securely:
-  #service:
-  #  <SERVICE-NAME>:
-  #    URL: <URL>
-  #    Authorization: <Authorization>
