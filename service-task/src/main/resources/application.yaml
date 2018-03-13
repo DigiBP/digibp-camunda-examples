@@ -13,6 +13,8 @@ camunda:
       password: demo
     filter:
       create: All Tasks
+    authorization:
+      enabled: false
 
 spring:
   profiles:
