@@ -6,6 +6,12 @@
 [![DigiBP Camunda Template](https://img.shields.io/badge/DigiBP-Camunda%20Template-red.svg?longCache=true)](https://github.com/DigiBP/digibp-camunda-template)
 [![DigiBP Camunda Examples](https://img.shields.io/badge/DigiBP-Camunda%20Examples-blue.svg?longCache=true)](https://github.com/DigiBP/digibp-camunda-examples)
 
+## Examples
+
+| Scenario | Image |
+|--- | --- |
+| [model-references](model-references) shows how models such as BPMN, DMN and CMMN can be linked. | [![](model-references/images/model-references-to-dmn.png)](model-references) |
+
 ## How-To
 1. Fork this repository.
 2. Connect your Heroku-Account to your GitHub-Account.

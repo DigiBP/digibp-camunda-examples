@@ -19,9 +19,11 @@
         <module>service-task-java</module>
         <module>listener-java</module>
         <module>embedded-forms</module>
-        <module>service-task</module>
         <module>rest-api</module>
         <module>model-references</module>
+        <module>mail-extension</module>
+        <module>service-task</module>
+        <module>service-task-jax-rs</module>
     </modules>
 
 
