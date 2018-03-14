@@ -5,7 +5,7 @@
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="gradeA" label="Grade A" type="long" />
-          <camunda:formField id="gradeB1" label="Grade B part 1" type="string" />
+          <camunda:formField id="gradeB1" label="Grade B part 1" type="long" />
           <camunda:formField id="gradeB2" label="Grade B part 2" type="long" />
         </camunda:formData>
       </bpmn:extensionElements>
@@ -27,7 +27,7 @@
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="gradeA" label="Grade A" type="long" />
-          <camunda:formField id="gradeB1" label="Grade B part 1" type="string" />
+          <camunda:formField id="gradeB1" label="Grade B part 1" type="long" />
           <camunda:formField id="gradeB2" label="Grade B part 2" type="long" />
           <camunda:formField id="finalGrade" label="Final Grade" type="string" />
         </camunda:formData>
@@ -50,7 +50,7 @@
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="gradeA" label="Grade A" type="long" />
-          <camunda:formField id="gradeB1" label="Grade B part 1" type="string" />
+          <camunda:formField id="gradeB1" label="Grade B part 1" type="long" />
           <camunda:formField id="gradeB2" label="Grade B part 2" type="long" />
           <camunda:formField id="finalGrade" label="Final Grade" type="string" />
         </camunda:formData>
