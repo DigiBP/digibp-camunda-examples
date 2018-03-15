@@ -38,13 +38,19 @@ Decision table two does the overall assessment and takes the output (variable `g
 
 ### Modelling and Linking of BPMN and DMN
 
-
+You may start your process with some form data. In this case, there are variables (input fields) for assessing the grades:
 
 [![](images/2018-03-15_09h00_40.png)](images/2018-03-15_09h00_40.png)
 
+Embed the DMN with a business rule task and reference the overall decision table by `id`. A result variable can be defined, which is, in this case, a single result, to make use of the result (decision recommendation):
+
 [![](images/2018-03-15_09h01_34.png)](images/2018-03-15_09h01_34.png)
 
+Further, you may want to use the decision result variable at a gateway:
+
 [![](images/2018-03-15_09h02_41.png)](images/2018-03-15_09h02_41.png)
+
+And finally, you may want to use the decision result variable in a form as well:
 
 [![](images/2018-03-15_09h03_30.png)](images/2018-03-15_09h03_30.png)
 
