@@ -19,13 +19,26 @@ We have a fictive process where an overall grade needs to be assessed, and a dec
 
 ### Modelling of DRD and Decision Tables
 
+The scenario mentioned above is realized using two decision tables. The association is modelled using DRD:
+
 [![](images/2018-03-14_21h43_22.png)](images/2018-03-14_21h43_22.png)
+
+Decision table one is used to assess the grade B is the preceding table before assessing the overall result:
 
 [![](images/2018-03-14_21h43_02.png)](images/2018-03-14_21h43_02.png)
 
+> Make sure that the variable **names** and **data types** are **consistent** with possible workflow variables (or form fields).
+
+Decision table two does the overall assessment and takes the output (variable `gradeB`) of the preceding decision table as an input:
+ 
 [![](images/2018-03-14_21h43_12.png)](images/2018-03-14_21h43_12.png)
 
+> Make sure that the variable **names** and **data types** are **consistent** with the **preceding decision table** or possible workflow variables (or form fields).
+
+
 ### Modelling and Linking of BPMN and DMN
+
+
 
 [![](images/2018-03-15_09h00_40.png)](images/2018-03-15_09h00_40.png)
 
