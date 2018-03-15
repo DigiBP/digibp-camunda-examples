@@ -5,6 +5,8 @@
 
 This project shows how models such as BPMN, DMN and ~~CMMN~~ can be linked.
 
+✔ Business Rule Task<br>✔ Call Activity
+
 ## BPMN linking DMN
 
 The following example shows how a DMN model,  containing a DRD and two decision tables, can be called by and embedded using a business rule task.
@@ -13,10 +15,25 @@ The following example shows how a DMN model,  containing a DRD and two decision 
 
 We have a fictive process where an overall grade needs to be assessed, and a decision is made whether the overall grade is sufficient or not. The assessment will be done using two grades A and B, where B consists of two sub-grades part 1 and 2. All grades are based on the Swiss grading scheme.
 
-![](images/model-references-to-dmn.png)
+[![](images/model-references-to-dmn.png)](images/model-references-to-dmn.png)
 
-### DRD and Decision Tables
+### Modelling of DRD and Decision Tables
 
+[![](images/2018-03-14_21h43_22.png)](images/2018-03-14_21h43_22.png)
+
+[![](images/2018-03-14_21h43_02.png)](images/2018-03-14_21h43_02.png)
+
+[![](images/2018-03-14_21h43_12.png)](images/2018-03-14_21h43_12.png)
+
+### Modelling and Linking of BPMN and DMN
+
+[![](images/2018-03-15_09h00_40.png)](images/2018-03-15_09h00_40.png)
+
+[![](images/2018-03-15_09h01_34.png)](images/2018-03-15_09h01_34.png)
+
+[![](images/2018-03-15_09h02_41.png)](images/2018-03-15_09h02_41.png)
+
+[![](images/2018-03-15_09h03_30.png)](images/2018-03-15_09h03_30.png)
 
 
 ## Maintainer
