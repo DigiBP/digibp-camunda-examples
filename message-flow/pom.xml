@@ -103,7 +103,7 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
-        <defaultGoal>spring-boot:run</defaultGoal>
+        <defaultGoal>clean spring-boot:run</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
