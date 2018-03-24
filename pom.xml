@@ -24,6 +24,7 @@
         <module>mail-extension</module>
         <module>service-task</module>
         <module>service-task-jax-rs</module>
+        <module>event-subprocess</module>
     </modules>
 
 

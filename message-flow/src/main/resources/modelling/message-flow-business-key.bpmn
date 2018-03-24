@@ -12,7 +12,7 @@
       <bpmn:extensionElements>
         <camunda:formData businessKey="businessKey">
           <camunda:formField id="dataA" label="Data A" type="string" />
-          <camunda:formField id="businessKey" label="Business Key" type="string" />
+          <camunda:formField id="businessKey" label="Business Key" type="string" defaultValue="${strongUuidGenerator.getNextId()}" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_1yg5p13</bpmn:outgoing>
