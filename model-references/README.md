@@ -14,12 +14,14 @@ This project shows how models such as BPMN, DMN and ~~CMMN~~ can be linked.
     - [Modelling of DRD and Decision Tables](#modelling-of-drd-and-decision-tables)
     - [Modelling and Linking of BPMN and DMN](#modelling-and-linking-of-bpmn-and-dmn)
 - [BPMN calling BPMN](#bpmn-calling-bpmn)
+    - [Called BPMN](#called-bpmn)
+    - [Caller BPMN](#caller-bpmn)
 - [Maintainer](#maintainer)
 - [License](#license)
 
 ## BPMN linking DMN
 
-The following example shows how a DMN model,  containing a DRD and two decision tables, can be called by and embedded using a business rule task.
+The following example shows how a DMN model, containing a DRD and two decision tables, can be called by and embedded using a business rule task.
 
 ### Scenario
 
@@ -65,13 +67,35 @@ And finally, you may want to use the decision result variable in a form as well:
 
 ## BPMN calling BPMN
 
+The following example shows how a BPMN model can be called by and embedded using a call activity.
+
+### Called BPMN
+
+First, we define an exemplary process that will be called from another BPMN process:
+
+[![](images/2018-03-27_17h15_29.png)](images/2018-03-27_17h15_29.png)
+
+You may use (from the caller) and provide some data (from the called process):
+
+[![](images/2018-03-15_11h42_58.png)](images/2018-03-15_11h42_58.png)
+
+### Caller BPMN
+
+Then we can define the caller process, and we may collect some data of the caller process:
+
 [![](images/2018-03-15_11h41_42.png)](images/2018-03-15_11h41_42.png)
+
+#### Call Activity
+
+We can use the call activity to link and call another BPMN model by the to-be-called process id:
 
 [![](images/2018-03-15_11h42_08.png)](images/2018-03-15_11h42_08.png)
 
+Besides, you may pass over the data to the to-be-called process and map the resulting variables back to the caller process:
+
 [![](images/2018-03-15_11h42_35.png)](images/2018-03-15_11h42_35.png)
 
-[![](images/2018-03-15_11h42_58.png)](images/2018-03-15_11h42_58.png)
+Finally, you maybe want to present the exchanged/processed data to the user:
 
 [![](images/2018-03-15_11h43_32.png)](images/2018-03-15_11h43_32.png)
 
