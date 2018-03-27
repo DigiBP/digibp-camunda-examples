@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cmmn:definitions xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/cmmn" id="Test" targetNamespace="http://bpmn.io/schema/cmmn" exporter="Camunda Modeler" exporterVersion="1.11.3">
+  <cmmn:case id="CMMN_ref_called">
+    <cmmn:casePlanModel id="CasePlanModel_1" name="Called CMMN">
+      <cmmn:planItem id="PlanItem_1" definitionRef="HumanTask_0nokct0" />
+      <cmmn:planItem id="PlanItem_19i8r28" definitionRef="ProcessTask_0mcqdym" />
+      <cmmn:planItem id="PlanItem_1xbdida" definitionRef="CaseTask_0ukhxta" />
+      <cmmn:humanTask id="HumanTask_0nokct0" name="Do some work" camunda:assignee="demo" camunda:candidateUsers="demo" />
+      <cmmn:processTask id="ProcessTask_0mcqdym" name="Call BPMN" processRef="Process_ref_called">
+        <cmmn:extensionElements>
+          <camunda:in variables="all" />
+          <camunda:out variables="all" />
+          <camunda:in businessKey="#{caseExecution.caseBusinessKey}" />
+        </cmmn:extensionElements>
+      </cmmn:processTask>
+      <cmmn:caseTask id="CaseTask_0ukhxta" name="Call CMMN" caseRef="CMMN_from_CMMN_ref_called">
+        <cmmn:extensionElements>
+          <camunda:in businessKey="#{caseExecution.caseBusinessKey}" />
+          <camunda:in variables="all" />
+          <camunda:out variables="all" />
+        </cmmn:extensionElements>
+      </cmmn:caseTask>
+    </cmmn:casePlanModel>
+  </cmmn:case>
+  <cmmndi:CMMNDI>
+    <cmmndi:CMMNDiagram id="_5a66685b-5f57-4e2f-b1d1-acca4fae04b2">
+      <cmmndi:Size xsi:type="dc:Dimension" width="500" height="500" />
+      <cmmndi:CMMNShape id="DI_CasePlanModel_1" cmmnElementRef="CasePlanModel_1">
+        <dc:Bounds x="114" y="63" width="292" height="235" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_1qp9tkh_di" cmmnElementRef="PlanItem_1">
+        <dc:Bounds x="214" y="95" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_0x7jj4m_di" cmmnElementRef="PlanItem_19i8r28">
+        <dc:Bounds x="150" y="198" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_1qfprht_di" cmmnElementRef="PlanItem_1xbdida">
+        <dc:Bounds x="277" y="198" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+    </cmmndi:CMMNDiagram>
+  </cmmndi:CMMNDI>
+</cmmn:definitions>

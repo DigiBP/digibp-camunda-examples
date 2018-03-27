@@ -3,7 +3,7 @@
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 [![Deploy to Heroku](https://img.shields.io/badge/deploy%20to-Heroku-6762a6.svg?longCache=true)](https://heroku.com/deploy)
 
-This project shows how models such as BPMN, DMN and ~~CMMN~~ can be linked.
+This project shows how models such as BPMN, DMN and CMMN can be linked.
 
 ✔ Business Rule Task<br>✔ Call Activity
 
@@ -15,6 +15,9 @@ This project shows how models such as BPMN, DMN and ~~CMMN~~ can be linked.
     - [Modelling and Linking of BPMN and DMN](#modelling-and-linking-of-bpmn-and-dmn)
 - [BPMN calling BPMN](#bpmn-calling-bpmn)
     - [Called BPMN](#called-bpmn)
+    - [Caller BPMN](#caller-bpmn)
+- [BPMN calling CMMN](#bpmn-calling-cmmn)
+    - [Called CMMN](#called-cmmn)
     - [Caller BPMN](#caller-bpmn)
 - [Maintainer](#maintainer)
 - [License](#license)
@@ -98,6 +101,36 @@ Besides, you may pass over the data to the to-be-called process and map the resu
 Finally, you maybe want to present the exchanged/processed data to the user:
 
 [![](images/2018-03-15_11h43_32.png)](images/2018-03-15_11h43_32.png)
+
+## BPMN calling CMMN
+
+The following example shows how a CMMN model can be called by and embedded using a call activity.
+
+### Called CMMN
+
+First, we define an exemplary case that will be called from a BPMN process:
+
+[![](images/2018-03-27_18h40_44.png)](images/2018-03-27_18h40_44.png)
+
+#### CMMN calling BPMN
+
+[![](images/2018-03-27_18h50_15.png)](images/2018-03-27_18h50_15.png)
+
+#### CMMN calling CMMN
+
+[![](images/2018-03-27_18h40_06.png)](images/2018-03-27_18h40_06.png)
+
+[![](images/2018-03-27_18h41_11.png)](images/2018-03-27_18h41_11.png)
+
+### Caller BPMN
+
+#### Call Activity
+
+We can use the call activity to link and call CMMN model by the to-be-called case id:
+
+[![](images/2018-03-27_18h38_40.png)](images/2018-03-27_18h38_40.png)
+
+[![](images/2018-03-27_18h39_15.png)](images/2018-03-27_18h39_15.png)
 
 ## Maintainer
 - [Digitalisation of Business Processes](https://github.com/digibp)
