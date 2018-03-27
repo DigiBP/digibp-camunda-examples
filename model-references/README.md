@@ -24,7 +24,7 @@ This project shows how models such as BPMN, DMN and CMMN can be linked.
 
 ## BPMN linking DMN
 
-The following example shows how a DMN model, containing a DRD and two decision tables, can be called by and embedded using a business rule task.
+The following example shows how a DMN model, containing a DRD and two decision tables, can be called a business rule task.
 
 ### Scenario
 
@@ -70,7 +70,7 @@ And finally, you may want to use the decision result variable in a form as well:
 
 ## BPMN calling BPMN
 
-The following example shows how a BPMN model can be called by and embedded using a call activity.
+The following example shows how a BPMN model can be called by a call activity.
 
 ### Called BPMN
 
@@ -88,7 +88,7 @@ Then we can define the caller process, and we may collect some data of the calle
 
 [![](images/2018-03-15_11h41_42.png)](images/2018-03-15_11h41_42.png)
 
-#### Call Activity
+#### Call Activity to BPMN
 
 We can use the call activity to link and call another BPMN model by the to-be-called process id:
 
@@ -104,7 +104,7 @@ Finally, you maybe want to present the exchanged/processed data to the user:
 
 ## BPMN calling CMMN
 
-The following example shows how a CMMN model can be called by and embedded using a call activity.
+The following example shows how a CMMN model can be called by a call activity.
 
 ### Called CMMN
 
@@ -114,21 +114,35 @@ First, we define an exemplary case that will be called from a BPMN process:
 
 #### CMMN calling BPMN
 
+In [this called CMMN case](#called-cmmn) it is shown how a BPMN process can be called using a process task:
+
 [![](images/2018-03-27_18h50_15.png)](images/2018-03-27_18h50_15.png)
+
+> You may want to transfer the case [variables](#call-activity-to-cmmn) to the to-be-called process.
 
 #### CMMN calling CMMN
 
+Besides, in [this called CMMN case](#called-cmmn) it is shown how a further CMMN model can be called using a case task:
+
 [![](images/2018-03-27_18h40_06.png)](images/2018-03-27_18h40_06.png)
+
+> You may want to transfer the case [variables](#call-activity-to-cmmn) to the to-be-called case as well.
+
+Reference the to-be-called CMMN model by case id:
 
 [![](images/2018-03-27_18h41_11.png)](images/2018-03-27_18h41_11.png)
 
 ### Caller BPMN
 
-#### Call Activity
+Finally, we can define the caller process.
 
-We can use the call activity to link and call CMMN model by the to-be-called case id:
+#### Call Activity to CMMN
+
+We can use the call activity to link and call the CMMN model by the to-be-called case id:
 
 [![](images/2018-03-27_18h38_40.png)](images/2018-03-27_18h38_40.png)
+
+You may want to transfer the process variables to the to-be-called case as well:
 
 [![](images/2018-03-27_18h39_15.png)](images/2018-03-27_18h39_15.png)
 
