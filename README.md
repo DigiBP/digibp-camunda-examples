@@ -10,7 +10,7 @@
 
 | Scenario | Image |
 |--- | --- |
-| **Model References**<br><br>[model-references](model-references) shows how models such as BPMN, DMN and CMMN can be linked.<br><br>✔ Business Rule Task<br>✔ Call Activity | [![](model-references/images/model-references-to-dmn.png)](model-references) |
+| **Model References**<br><br>[model-references](model-references) shows how models such as BPMN, DMN and CMMN can be linked.<br><br>✔ Business Rule Task<br>✔ Call Activity<br>✔ (X)OR Sequence Expression | [![](model-references/images/model-references-to-dmn.png)](model-references) |
 
 #### Sub-Module Heroku Deployment
 

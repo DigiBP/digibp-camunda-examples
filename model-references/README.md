@@ -6,7 +6,7 @@
 
 This project shows how models such as BPMN, DMN and CMMN can be linked.
 
-✔ Business Rule Task<br>✔ Call Activity
+✔ Business Rule Task<br>✔ Call Activity<br>✔ (X)OR Sequence Expression
 
 **Contents:**
 
