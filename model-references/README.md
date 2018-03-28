@@ -8,8 +8,7 @@ This project shows how models such as BPMN, DMN and CMMN can be linked.
 
 ✔ Business Rule Task<br>✔ Call Activity<br>✔ (X)OR Sequence Expression
 
-**Contents:**
-
+#### Contents:
 - [BPMN linking DMN](#bpmn-linking-dmn)
     - [Scenario](#scenario)
     - [Modelling of DRD and Decision Tables](#modelling-of-drd-and-decision-tables)
