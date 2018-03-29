@@ -8,10 +8,7 @@ package ch.fhnw.digibp.examples.echo.api;
 import ch.fhnw.digibp.examples.echo.dto.EchoData;
 import ch.fhnw.digibp.examples.echo.service.EchoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/echo/v1")
@@ -20,7 +17,7 @@ public class EchoEndpoint {
     private EchoService echoService;
 
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public EchoData echo(EchoData echoData) {
+    public EchoData echo(@RequestBody EchoData echoData) {
         return echoService.echo(echoData);
     }
 
