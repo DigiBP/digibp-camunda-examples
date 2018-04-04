@@ -26,18 +26,18 @@
             </camunda:inputParameter>
             <camunda:inputParameter name="payload">
               <camunda:script scriptFormat="JavaScript"><![CDATA[out = JSON.stringify({
-    "variableA": execution.getVariable("processVariableA"),
-    "variableB": execution.getVariable("processVariableB"),
+    "variableA": processVariableA,
+    "variableB": processVariableB,
     "businessKey": execution.getProcessBusinessKey()
 });]]></camunda:script>
             </camunda:inputParameter>
             <camunda:outputParameter name="processVariableA">
-              <camunda:script scriptFormat="JavaScript"><![CDATA[response = JSON.parse(connector.getVariable("response"));
-processVariableA = response.variableA;]]></camunda:script>
+              <camunda:script scriptFormat="JavaScript"><![CDATA[object = JSON.parse(response);
+processVariableA = object.variableA;]]></camunda:script>
             </camunda:outputParameter>
             <camunda:outputParameter name="processVariableB">
-              <camunda:script scriptFormat="JavaScript"><![CDATA[response = JSON.parse(connector.getVariable("response"));
-processVariableB = response.variableB;]]></camunda:script>
+              <camunda:script scriptFormat="JavaScript"><![CDATA[object = JSON.parse(response);
+processVariableB = object.variableB;]]></camunda:script>
             </camunda:outputParameter>
           </camunda:inputOutput>
           <camunda:connectorId>http-connector</camunda:connectorId>

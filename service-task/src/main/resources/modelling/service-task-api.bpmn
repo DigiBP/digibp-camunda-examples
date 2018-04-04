@@ -12,31 +12,31 @@
       <bpmn:outgoing>SequenceFlow_0izfwy8</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0izfwy8" sourceRef="StartEvent_1" targetRef="Task_0gfj0f8" />
-    <bpmn:serviceTask id="Task_0gfj0f8" name="Receive echo">
+    <bpmn:serviceTask id="Task_0gfj0f8" name="Receive echo" camunda:modelerTemplate="digibp.connector.http.body">
       <bpmn:extensionElements>
-        <camunda:connector>
+        <camunda:connector inout="">
           <camunda:inputOutput>
-            <camunda:inputParameter name="url">http://localhost:8080/echo/v1</camunda:inputParameter>
             <camunda:inputParameter name="method">POST</camunda:inputParameter>
             <camunda:inputParameter name="headers">
-              <camunda:map>
-                <camunda:entry key="Content-Type">application/json</camunda:entry>
-              </camunda:map>
+              <camunda:script scriptFormat="JavaScript"><![CDATA[var header = new java.util.HashMap();
+header.put("Content-Type","application/json");
+header;]]></camunda:script>
             </camunda:inputParameter>
             <camunda:inputParameter name="payload">
               <camunda:script scriptFormat="JavaScript"><![CDATA[out = JSON.stringify({
-    "variableA": execution.getVariable("processVariableA"),
-    "variableB": execution.getVariable("processVariableB"),
+    "variableA": processVariableA,
+    "variableB": processVariableB,
     "businessKey": execution.getProcessBusinessKey()
 });]]></camunda:script>
             </camunda:inputParameter>
+            <camunda:inputParameter name="url">http://localhost:8080/echo/v1</camunda:inputParameter>
             <camunda:outputParameter name="processVariableA">
-              <camunda:script scriptFormat="JavaScript"><![CDATA[response = JSON.parse(connector.getVariable("response"));
-processVariableA = response.variableA;]]></camunda:script>
+              <camunda:script scriptFormat="JavaScript"><![CDATA[object = JSON.parse(response);
+processVariableA = object.variableA;]]></camunda:script>
             </camunda:outputParameter>
             <camunda:outputParameter name="processVariableB">
-              <camunda:script scriptFormat="JavaScript"><![CDATA[response = JSON.parse(connector.getVariable("response"));
-processVariableB = response.variableB;]]></camunda:script>
+              <camunda:script scriptFormat="JavaScript"><![CDATA[object = JSON.parse(response);
+processVariableB = object.variableB;]]></camunda:script>
             </camunda:outputParameter>
           </camunda:inputOutput>
           <camunda:connectorId>http-connector</camunda:connectorId>
