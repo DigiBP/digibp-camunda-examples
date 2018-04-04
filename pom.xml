@@ -25,6 +25,8 @@
         <module>service-task</module>
         <module>service-task-jax-rs</module>
         <module>event-subprocess</module>
+        <module>service-resilience</module>
+        <module>service-communication</module>
     </modules>
 
 

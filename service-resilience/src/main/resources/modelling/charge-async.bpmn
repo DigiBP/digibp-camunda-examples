@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.12.0">
+  <bpmn:message id="Message_1k9v13u" name="Msg_DoPayment" />
+  <bpmn:error id="Error_1qxsin7" name="CreditCardFailedError" errorCode="CreditCardChargeError" />
+  <bpmn:message id="Message_03z4dfb" name="Msg_CreditCardUpdated" />
+  <bpmn:message id="Message_11e9vuz" name="RetrievePaymentCommand" />
+  <bpmn:collaboration id="Collaboration_1vyu71a">
+    <bpmn:participant id="Participant_1uj14wd" processRef="charge-async" />
+    <bpmn:participant id="Participant_0uuz9f5" processRef="charge-async-retry" />
+    <bpmn:messageFlow id="MessageFlow_182y46q" sourceRef="ServiceTask_10hm6pn" targetRef="StartEvent_0oidg4k" />
+    <bpmn:messageFlow id="MessageFlow_1oq6xtn" sourceRef="Task_1xit3nl" targetRef="IntermediateThrowEvent_02dfk5c" />
+  </bpmn:collaboration>
+  <bpmn:process id="charge-async" name="charge-async" isExecutable="true">
+    <bpmn:laneSet />
+    <bpmn:startEvent id="StartEvent_1" name="Payment requested">
+      <bpmn:extensionElements>
+        <camunda:formData businessKey="businessKey">
+          <camunda:formField id="amount" label="Amount" type="string" defaultValue="200" />
+          <camunda:formField id="businessKey" label="Business Key" type="string" defaultValue="${strongUuidGenerator.getNextId()}" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_0yywoto</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_0769is9" name="Payment received">
+      <bpmn:incoming>SequenceFlow_0dbo7tm</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="Task_1iq7kqr" name="Do some work" camunda:assignee="demo" camunda:candidateUsers="demo">
+      <bpmn:incoming>SequenceFlow_181qpyh</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0dbo7tm</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="ServiceTask_10hm6pn" name="Charge credit card" camunda:modelerTemplate="digibp.connector.http.body" camunda:delegateExpression="#{chargeCreditCardAdapter}">
+      <bpmn:extensionElements>
+        <camunda:connector inout="">
+          <camunda:inputOutput>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[var header = new java.util.HashMap();
+header.put("Content-Type","application/json")
+header;]]></camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="url">http://localhost:8080/rest/message</camunda:inputParameter>
+            <camunda:inputParameter name="payload">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[out = JSON.stringify({"messageName": "Message_charging_requested", "businessKey":execution.getProcessBusinessKey()});]]></camunda:script>
+            </camunda:inputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0yywoto</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1x5dcf0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Task_0puoo90" name="Do some work" camunda:asyncBefore="true" camunda:assignee="demo" camunda:candidateUsers="demo">
+      <bpmn:incoming>SequenceFlow_1x5dcf0</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0afcjsu</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0yywoto" sourceRef="StartEvent_1" targetRef="ServiceTask_10hm6pn" />
+    <bpmn:sequenceFlow id="SequenceFlow_1x5dcf0" sourceRef="ServiceTask_10hm6pn" targetRef="Task_0puoo90" />
+    <bpmn:sequenceFlow id="SequenceFlow_0afcjsu" sourceRef="Task_0puoo90" targetRef="IntermediateThrowEvent_02dfk5c" />
+    <bpmn:sequenceFlow id="SequenceFlow_181qpyh" sourceRef="IntermediateThrowEvent_02dfk5c" targetRef="Task_1iq7kqr" />
+    <bpmn:sequenceFlow id="SequenceFlow_0dbo7tm" sourceRef="Task_1iq7kqr" targetRef="EndEvent_0769is9" />
+    <bpmn:intermediateCatchEvent id="IntermediateThrowEvent_02dfk5c" name="Card charged">
+      <bpmn:incoming>SequenceFlow_0afcjsu</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_181qpyh</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Message_0k71thb" />
+    </bpmn:intermediateCatchEvent>
+  </bpmn:process>
+  <bpmn:process id="charge-async-retry" name="charge-async-retry" isExecutable="true">
+    <bpmn:userTask id="Task_0f4ut06" name="Do some work" camunda:assignee="demo" camunda:candidateUsers="demo">
+      <bpmn:incoming>SequenceFlow_0k9nh7i</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0jj295d</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_066i5at" name="Credit card charged">
+      <bpmn:incoming>SequenceFlow_0e7pmxq</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0k9nh7i" sourceRef="StartEvent_0oidg4k" targetRef="Task_0f4ut06" />
+    <bpmn:sequenceFlow id="SequenceFlow_0jj295d" sourceRef="Task_0f4ut06" targetRef="Task_1xit3nl" />
+    <bpmn:sequenceFlow id="SequenceFlow_0e7pmxq" sourceRef="Task_1xit3nl" targetRef="EndEvent_066i5at" />
+    <bpmn:startEvent id="StartEvent_0oidg4k" name="Charging requested">
+      <bpmn:outgoing>SequenceFlow_0k9nh7i</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Message_0j8qdv1" />
+    </bpmn:startEvent>
+    <bpmn:sendTask id="Task_1xit3nl" name="Send notification" camunda:modelerTemplate="digibp.connector.http.body" camunda:asyncBefore="true">
+      <bpmn:extensionElements>
+        <camunda:connector inout="">
+          <camunda:inputOutput>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[var header = new java.util.HashMap();
+header.put("Content-Type","application/json");
+header;]]></camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="url">http://localhost:8080/rest/message</camunda:inputParameter>
+            <camunda:inputParameter name="payload">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[out = JSON.stringify({"messageName": "Message_card_charged", "businessKey":execution.getProcessBusinessKey()});]]></camunda:script>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="statusCode">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[if ((statusCode / 100|0)> 2) {
+    throw new org.springframework.web.client.HttpServerErrorException(org.springframework.http.HttpStatus.valueOf(statusCode));
+} 
+statusCode;]]></camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+        <camunda:failedJobRetryTimeCycle>R3/PT15S</camunda:failedJobRetryTimeCycle>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0jj295d</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0e7pmxq</bpmn:outgoing>
+    </bpmn:sendTask>
+  </bpmn:process>
+  <bpmn:message id="Message_0j8qdv1" name="Message_charging_requested" />
+  <bpmn:message id="Message_0k71thb" name="Message_card_charged" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1vyu71a">
+      <bpmndi:BPMNShape id="Participant_1uj14wd_di" bpmnElement="Participant_1uj14wd">
+        <dc:Bounds x="20" y="36" width="827" height="137" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0htyixt_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="70" y="78" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="65" y="114" width="49" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1qpfh34_di" bpmnElement="EndEvent_0769is9">
+        <dc:Bounds x="764" y="78" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="739" y="114" width="88" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_19wbxlk_di" bpmnElement="Task_1iq7kqr">
+        <dc:Bounds x="618" y="56" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_10hm6pn_di" bpmnElement="ServiceTask_10hm6pn">
+        <dc:Bounds x="199" y="56" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_1htc2zn_di" bpmnElement="Task_0puoo90">
+        <dc:Bounds x="372" y="56" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_113cl37_di" bpmnElement="StartEvent_0oidg4k">
+        <dc:Bounds x="229" y="260" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="223" y="300" width="49" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_06s0hhv_di" bpmnElement="Task_0f4ut06">
+        <dc:Bounds x="336" y="238" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SendTask_12bzd13_di" bpmnElement="Task_1xit3nl">
+        <dc:Bounds x="495" y="238" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_066i5at_di" bpmnElement="EndEvent_066i5at">
+        <dc:Bounds x="648" y="260" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="639" y="300" width="54" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0yywoto_di" bpmnElement="SequenceFlow_0yywoto">
+        <di:waypoint x="106" y="96" />
+        <di:waypoint x="199" y="96" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="152.5" y="75" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1x5dcf0_di" bpmnElement="SequenceFlow_1x5dcf0">
+        <di:waypoint x="299" y="96" />
+        <di:waypoint x="372" y="96" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="335.5" y="75" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0afcjsu_di" bpmnElement="SequenceFlow_0afcjsu">
+        <di:waypoint x="472" y="96" />
+        <di:waypoint x="527" y="96" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="499.5" y="75" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_181qpyh_di" bpmnElement="SequenceFlow_181qpyh">
+        <di:waypoint x="563" y="96" />
+        <di:waypoint x="618" y="96" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="590.5" y="75" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0dbo7tm_di" bpmnElement="SequenceFlow_0dbo7tm">
+        <di:waypoint x="718" y="96" />
+        <di:waypoint x="764" y="96" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="741" y="75" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0k9nh7i_di" bpmnElement="SequenceFlow_0k9nh7i">
+        <di:waypoint x="265" y="278" />
+        <di:waypoint x="336" y="278" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="300.5" y="257" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0jj295d_di" bpmnElement="SequenceFlow_0jj295d">
+        <di:waypoint x="436" y="278" />
+        <di:waypoint x="495" y="278" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="465.5" y="257" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0e7pmxq_di" bpmnElement="SequenceFlow_0e7pmxq">
+        <di:waypoint x="595" y="278" />
+        <di:waypoint x="648" y="278" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="621.5" y="257" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_1uvz2d0_di" bpmnElement="Participant_0uuz9f5">
+        <dc:Bounds x="20" y="218" width="829" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_182y46q_di" bpmnElement="MessageFlow_182y46q">
+        <di:waypoint x="247" y="136" />
+        <di:waypoint x="247" y="260" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="262" y="192" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_1a31d30_di" bpmnElement="IntermediateThrowEvent_02dfk5c">
+        <dc:Bounds x="527" y="78" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="511" y="56" width="67" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_1oq6xtn_di" bpmnElement="MessageFlow_1oq6xtn">
+        <di:waypoint x="545" y="238" />
+        <di:waypoint x="545" y="114" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="560" y="170" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

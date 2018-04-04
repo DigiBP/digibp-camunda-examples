@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.12.0">
+  <bpmn:process id="charge-timeout-retry" name="charge-timeout-retry" isExecutable="true">
+    <bpmn:serviceTask id="ServiceTask_10hm6pn" name="Charge credit card" camunda:modelerTemplate="digibp.connector.http.body" camunda:asyncBefore="true" camunda:delegateExpression="#{chargeCreditCardAdapter}">
+      <bpmn:extensionElements>
+        <camunda:failedJobRetryTimeCycle>R2/PT5S</camunda:failedJobRetryTimeCycle>
+        <camunda:connector inout="">
+          <camunda:inputOutput>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[var header = new java.util.HashMap();
+header.put("Content-Type","application/json")
+header;]]></camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="payload">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[out = JSON.stringify({"amount": amount});]]></camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="url">http://localhost:8080/creditcard/v1/charge/timeout</camunda:inputParameter>
+            <camunda:outputParameter name="processVariableResponse">
+              <camunda:script scriptFormat="JavaScript">response;</camunda:script>
+            </camunda:outputParameter>
+            <camunda:outputParameter name="statusCode">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[if (org.camunda.bpm.engine.impl.context.Context.getJobExecutorContext().getCurrentJob().getRetries() <= 1) {
+    throw new org.camunda.bpm.engine.delegate.BpmnError("CreditCardChargeError", "Retry failed");
+} else if ((statusCode / 100 | 0) > 2) {
+    throw new org.springframework.web.client.HttpServerErrorException(org.springframework.http.HttpStatus.valueOf(statusCode));
+}
+statusCode;]]></camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1j48oz9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_064rfmt</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="BoundaryEvent_0s43v6m" name="Retry failed" attachedToRef="ServiceTask_10hm6pn">
+      <bpmn:outgoing>SequenceFlow_1me4ldb</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_1qxsin7" camunda:errorMessageVariable="errorMessage" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1me4ldb" sourceRef="BoundaryEvent_0s43v6m" targetRef="Task_0sdkq4x" />
+    <bpmn:sequenceFlow id="SequenceFlow_064rfmt" sourceRef="ServiceTask_10hm6pn" targetRef="EndEvent_0769is9" />
+    <bpmn:endEvent id="EndEvent_0769is9" name="Payment received">
+      <bpmn:incoming>SequenceFlow_064rfmt</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="StartEvent_1" name="Payment requested">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="amount" label="Amount" type="string" defaultValue="200" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_1j48oz9</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1j48oz9" sourceRef="StartEvent_1" targetRef="ServiceTask_10hm6pn" />
+    <bpmn:endEvent id="EndEvent_1uifh9v" name="Payment failed">
+      <bpmn:incoming>SequenceFlow_1vc7en0</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1vc7en0" sourceRef="Task_0sdkq4x" targetRef="EndEvent_1uifh9v" />
+    <bpmn:userTask id="Task_0sdkq4x" name="Try to refund (if charged)" camunda:assignee="demo" camunda:candidateUsers="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="amount" label="Amount" type="string" />
+          <camunda:formField id="errorMessage" label="Error Message" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1me4ldb</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1vc7en0</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:textAnnotation id="TextAnnotation_0d1u4g7">
+      <bpmn:text><![CDATA[Retry Time Cycle:
+R2/PT5S (2 x 5 sec wait)
+]]></bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1cowjm4" sourceRef="ServiceTask_10hm6pn" targetRef="TextAnnotation_0d1u4g7" />
+    <bpmn:textAnnotation id="TextAnnotation_0efv61j">
+      <bpmn:text><![CDATA[Asynchronous Continuation: Before & Exclusive]]></bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0ibxkbf" sourceRef="ServiceTask_10hm6pn" targetRef="TextAnnotation_0efv61j" />
+  </bpmn:process>
+  <bpmn:message id="Message_1k9v13u" name="Msg_DoPayment" />
+  <bpmn:error id="Error_1qxsin7" name="CreditCardFailedError" errorCode="CreditCardChargeError" />
+  <bpmn:message id="Message_03z4dfb" name="Msg_CreditCardUpdated" />
+  <bpmn:message id="Message_11e9vuz" name="RetrievePaymentCommand" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="charge-timeout-retry">
+      <bpmndi:BPMNShape id="ServiceTask_10hm6pn_di" bpmnElement="ServiceTask_10hm6pn">
+        <dc:Bounds x="193" y="56" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0s43v6m_di" bpmnElement="BoundaryEvent_0s43v6m">
+        <dc:Bounds x="253" y="118" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="289" y="150" width="55" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1me4ldb_di" bpmnElement="SequenceFlow_1me4ldb">
+        <di:waypoint x="271" y="154" />
+        <di:waypoint x="271" y="231" />
+        <di:waypoint x="358" y="231" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="241" y="192.5" width="90" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_064rfmt_di" bpmnElement="SequenceFlow_064rfmt">
+        <di:waypoint x="293" y="96" />
+        <di:waypoint x="390" y="96" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="296.5" y="81" width="90" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1qpfh34_di" bpmnElement="EndEvent_0769is9">
+        <dc:Bounds x="390" y="78" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="365" y="114" width="88" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0htyixt_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="70" y="78" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="65" y="114" width="49" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1j48oz9_di" bpmnElement="SequenceFlow_1j48oz9">
+        <di:waypoint x="106" y="96" />
+        <di:waypoint x="193" y="96" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="104.5" y="75" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1uifh9v_di" bpmnElement="EndEvent_1uifh9v">
+        <dc:Bounds x="551" y="213" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="534" y="253" width="71" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1vc7en0_di" bpmnElement="SequenceFlow_1vc7en0">
+        <di:waypoint x="458" y="231" />
+        <di:waypoint x="551" y="231" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="504.5" y="210" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_19jr5n1_di" bpmnElement="Task_0sdkq4x">
+        <dc:Bounds x="358" y="191" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0d1u4g7_di" bpmnElement="TextAnnotation_0d1u4g7">
+        <dc:Bounds x="128" y="217" width="157" height="46" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1cowjm4_di" bpmnElement="Association_1cowjm4">
+        <di:waypoint x="233" y="136" />
+        <di:waypoint x="213" y="217" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0efv61j_di" bpmnElement="TextAnnotation_0efv61j">
+        <dc:Bounds x="59" y="157" width="172" height="41" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0ibxkbf_di" bpmnElement="Association_0ibxkbf">
+        <di:waypoint x="197" y="134" />
+        <di:waypoint x="170" y="157" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

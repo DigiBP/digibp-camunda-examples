@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.12.0">
+  <bpmn:collaboration id="Collaboration_0za6fu4">
+    <bpmn:participant id="Participant_11mgy9y" processRef="orchestration-checkout" />
+    <bpmn:participant id="Participant_0mo5zaa" processRef="orchestration-order" />
+    <bpmn:messageFlow id="MessageFlow_1b1408v" sourceRef="Task_11pgyh7" targetRef="StartEvent_0pc281w" />
+  </bpmn:collaboration>
+  <bpmn:process id="orchestration-checkout" name="orchestration-checkout" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Start Event">
+      <bpmn:outgoing>SequenceFlow_1fs2r0c</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_0a63vr7" name="End Event">
+      <bpmn:incoming>SequenceFlow_09xhco1</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Task_11pgyh7" name="Do checkout" camunda:expression="${runtimeService.createMessageCorrelation(&#34;Message_order_placed_orchestration&#34;).setVariables(execution.getVariables()).correlateWithResult()}">
+      <bpmn:incoming>SequenceFlow_1fs2r0c</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_09xhco1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_09xhco1" sourceRef="Task_11pgyh7" targetRef="EndEvent_0a63vr7" />
+    <bpmn:sequenceFlow id="SequenceFlow_1fs2r0c" sourceRef="StartEvent_1" targetRef="Task_11pgyh7" />
+  </bpmn:process>
+  <bpmn:process id="orchestration-order" name="orchestration-order" isExecutable="true">
+    <bpmn:sequenceFlow id="SequenceFlow_1rcfvpn" sourceRef="StartEvent_0pc281w" targetRef="Task_1je83v5" />
+    <bpmn:sequenceFlow id="SequenceFlow_0u3bwy6" sourceRef="Task_1je83v5" targetRef="Task_11xlh66" />
+    <bpmn:sequenceFlow id="SequenceFlow_1wi3mc0" sourceRef="Task_11xlh66" targetRef="Task_0qa8w6l" />
+    <bpmn:endEvent id="EndEvent_1a2vc93" name="Order delivered">
+      <bpmn:incoming>SequenceFlow_05km63w</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_05km63w" sourceRef="Task_0qa8w6l" targetRef="EndEvent_1a2vc93" />
+    <bpmn:serviceTask id="Task_1je83v5" name="Retrieve payment" camunda:modelerTemplate="digibp.connector.http.body">
+      <bpmn:extensionElements>
+        <camunda:connector inout="">
+          <camunda:inputOutput>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[var header = new java.util.HashMap();
+header.put("Content-Type","application/json");
+header;]]></camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="url">http://localhost:8080/orchestration/v1/payment</camunda:inputParameter>
+            <camunda:inputParameter name="payload">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[out = JSON.stringify({"payload": "retrieve payment"});]]></camunda:script>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="processVariableResponse">
+              <camunda:script scriptFormat="JavaScript">response;</camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1rcfvpn</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0u3bwy6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_0qa8w6l" name="Ship goods" camunda:modelerTemplate="digibp.connector.http.body">
+      <bpmn:extensionElements>
+        <camunda:connector inout="">
+          <camunda:inputOutput>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[var header = new java.util.HashMap();
+header.put("Content-Type","application/json");
+header;]]></camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="url">http://localhost:8080/orchestration/v1/shipping</camunda:inputParameter>
+            <camunda:inputParameter name="payload">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[out = JSON.stringify({"payload": "ship goods"});]]></camunda:script>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="processVariableResponse">
+              <camunda:script scriptFormat="JavaScript">response;</camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1wi3mc0</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_05km63w</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_11xlh66" name="Fetch goods" camunda:modelerTemplate="digibp.connector.http.body">
+      <bpmn:extensionElements>
+        <camunda:connector inout="">
+          <camunda:inputOutput>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[var header = new java.util.HashMap();
+header.put("Content-Type","application/json");
+header;]]></camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="url">http://localhost:8080/orchestration/v1/inventory</camunda:inputParameter>
+            <camunda:inputParameter name="payload">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[out = JSON.stringify({"payload": "fetch goods"});]]></camunda:script>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="processVariableResponse">
+              <camunda:script scriptFormat="JavaScript">response;</camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0u3bwy6</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1wi3mc0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="StartEvent_0pc281w" name="Order placed">
+      <bpmn:outgoing>SequenceFlow_1rcfvpn</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Message_1prkmrf" />
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmn:message id="Message_1prkmrf" name="Message_order_placed_orchestration" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0za6fu4">
+      <bpmndi:BPMNShape id="Participant_11mgy9y_di" bpmnElement="Participant_11mgy9y">
+        <dc:Bounds x="119" y="60" width="881" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="197" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="190" y="138" width="55" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0a63vr7_di" bpmnElement="EndEvent_0a63vr7">
+        <dc:Bounds x="472" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="465" y="142" width="51" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1pmefsl_di" bpmnElement="Task_11pgyh7">
+        <dc:Bounds x="307" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_09xhco1_di" bpmnElement="SequenceFlow_09xhco1">
+        <di:waypoint x="407" y="120" />
+        <di:waypoint x="472" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="395" y="99" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1fs2r0c_di" bpmnElement="SequenceFlow_1fs2r0c">
+        <di:waypoint x="233" y="120" />
+        <di:waypoint x="307" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="225" y="99" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_0mo5zaa_di" bpmnElement="Participant_0mo5zaa">
+        <dc:Bounds x="119" y="256" width="880" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1rcfvpn_di" bpmnElement="SequenceFlow_1rcfvpn">
+        <di:waypoint x="375" y="316" />
+        <di:waypoint x="432" y="316" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="403.5" y="295" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0u3bwy6_di" bpmnElement="SequenceFlow_0u3bwy6">
+        <di:waypoint x="532" y="316" />
+        <di:waypoint x="596" y="316" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="564" y="295" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1wi3mc0_di" bpmnElement="SequenceFlow_1wi3mc0">
+        <di:waypoint x="696" y="316" />
+        <di:waypoint x="762" y="316" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="729" y="295" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1a2vc93_di" bpmnElement="EndEvent_1a2vc93">
+        <dc:Bounds x="903" y="298" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="883" y="338" width="76" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_05km63w_di" bpmnElement="SequenceFlow_05km63w">
+        <di:waypoint x="862" y="316" />
+        <di:waypoint x="903" y="316" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="882.5" y="295" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_14tvzhw_di" bpmnElement="Task_1je83v5">
+        <dc:Bounds x="432" y="276" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0bbttxf_di" bpmnElement="Task_11xlh66">
+        <dc:Bounds x="596" y="276" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1byvyo3_di" bpmnElement="Task_0qa8w6l">
+        <dc:Bounds x="762" y="276" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1g51cmn_di" bpmnElement="StartEvent_0pc281w">
+        <dc:Bounds x="339" y="298" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="326" y="338" width="64" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_1b1408v_di" bpmnElement="MessageFlow_1b1408v">
+        <di:waypoint x="356" y="160" />
+        <di:waypoint x="356" y="298" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="371" y="223" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
