@@ -20,10 +20,13 @@ header;]]></camunda:script>
               <camunda:script scriptFormat="JavaScript">response;</camunda:script>
             </camunda:outputParameter>
             <camunda:outputParameter name="statusCode">
-              <camunda:script scriptFormat="JavaScript"><![CDATA[if (org.camunda.bpm.engine.impl.context.Context.getJobExecutorContext().getCurrentJob().getRetries() <= 1) {
-    throw new org.camunda.bpm.engine.delegate.BpmnError("CreditCardChargeError", "Retry failed");
-} else if ((statusCode / 100 | 0) > 2) {
-    throw new org.springframework.web.client.HttpServerErrorException(org.springframework.http.HttpStatus.valueOf(statusCode));
+              <camunda:script scriptFormat="JavaScript"><![CDATA[jobExecutorContext = org.camunda.bpm.engine.impl.context.Context.getJobExecutorContext();
+if (jobExecutorContext != null && jobExecutorContext.getCurrentJob() != null) {
+    if (jobExecutorContext.getCurrentJob().getRetries() <= 1) {
+        throw new org.camunda.bpm.engine.delegate.BpmnError("CreditCardChargeError", "Retry failed");
+    } else if ((statusCode / 100 | 0) > 2) {
+        throw new org.springframework.web.client.HttpServerErrorException(org.springframework.http.HttpStatus.valueOf(statusCode));
+    }
 }
 statusCode;]]></camunda:script>
             </camunda:outputParameter>
