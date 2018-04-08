@@ -23,14 +23,11 @@ public class MessageSender {
 
     public void send(Message<?> m) {
         try {
-            // avoid too much magic and transform ourselves
             ObjectMapper mapper = new ObjectMapper();
             String jsonMessage = mapper.writeValueAsString(m);
-            // wrap into a proper message for the transport (Kafka/Rabbit) and send it
-            output.send(
-                    MessageBuilder.withPayload(jsonMessage).build());
+            output.send(MessageBuilder.withPayload(jsonMessage).build());
         } catch (Exception e) {
-            throw new RuntimeException("Could not tranform and send message due to: "+ e.getMessage(), e);
+            throw new RuntimeException("Could not transform and send message due to: "+ e.getMessage(), e);
         }
     }
 }

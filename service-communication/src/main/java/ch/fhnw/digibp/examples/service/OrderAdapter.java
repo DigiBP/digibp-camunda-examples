@@ -11,15 +11,14 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.client.RestTemplate;
 
 import javax.inject.Named;
 import java.util.UUID;
 
 @Named
-public class MessageOrchestrationOrderAdapter {
+public class OrderAdapter {
 
-    private static Logger logger = LoggerFactory.getLogger(MessageOrchestrationOrderAdapter.class);
+    private static Logger logger = LoggerFactory.getLogger(OrderAdapter.class);
 
     @Autowired
     private MessageSender messageSender;

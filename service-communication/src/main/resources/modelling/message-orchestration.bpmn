@@ -25,7 +25,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_1fs2r0c" sourceRef="StartEvent_1" targetRef="Task_11pgyh7" />
   </bpmn:process>
   <bpmn:process id="message-orchestration-order" name="message-orchestration-order" isExecutable="true">
-    <bpmn:sendTask id="SendTask_1ngumwk" name="Retrieve payment" camunda:expression="#{messageOrchestrationOrderAdapter.retrievePayment(execution)}">
+    <bpmn:sendTask id="SendTask_1ngumwk" name="Retrieve payment" camunda:expression="#{orderAdapter.retrievePayment(execution)}">
       <bpmn:incoming>SequenceFlow_0687ng1</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1cm4pp6</bpmn:outgoing>
     </bpmn:sendTask>
@@ -33,7 +33,7 @@
       <bpmn:incoming>SequenceFlow_1cm4pp6</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_06x96j5</bpmn:outgoing>
     </bpmn:receiveTask>
-    <bpmn:sendTask id="SendTask_0yzd9lx" name="Fetch goods" camunda:expression="#{messageOrchestrationOrderAdapter.fetchGoods(execution)}">
+    <bpmn:sendTask id="SendTask_0yzd9lx" name="Fetch goods" camunda:expression="#{orderAdapter.fetchGoods(execution)}">
       <bpmn:incoming>SequenceFlow_06x96j5</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0oas8ou</bpmn:outgoing>
     </bpmn:sendTask>
@@ -41,7 +41,7 @@
       <bpmn:incoming>SequenceFlow_0oas8ou</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0heonjy</bpmn:outgoing>
     </bpmn:receiveTask>
-    <bpmn:sendTask id="SendTask_0k20j5h" name="Ship goods" camunda:expression="#{messageOrchestrationOrderAdapter.shipGoods(execution)}">
+    <bpmn:sendTask id="SendTask_0k20j5h" name="Ship goods" camunda:expression="#{orderAdapter.shipGoods(execution)}">
       <bpmn:incoming>SequenceFlow_0heonjy</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1qjinjz</bpmn:outgoing>
     </bpmn:sendTask>

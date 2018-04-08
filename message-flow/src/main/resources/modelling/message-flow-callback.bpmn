@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.11.3">
   <bpmn:collaboration id="Collaboration_12zap17">
-    <bpmn:participant id="Participant_1wadqwr" name="Process A" processRef="Process_A_business_key" />
-    <bpmn:participant id="Participant_0xe0rgh" name="Process B" processRef="Process_B_business_key" />
+    <bpmn:participant id="Participant_1wadqwr" name="Process A" processRef="Process_A_callback" />
+    <bpmn:participant id="Participant_0xe0rgh" name="Process B" processRef="Process_B_callback" />
     <bpmn:messageFlow id="MessageFlow_1sq4tgn" sourceRef="Task_1x43n2c" targetRef="StartEvent_0l49vh0" />
     <bpmn:messageFlow id="MessageFlow_0w9knu8" sourceRef="Task_0zfp4k4" targetRef="IntermediateThrowEvent_14wyrlw" />
     <bpmn:messageFlow id="MessageFlow_1twei9y" sourceRef="EndEvent_0h4ry7z" targetRef="IntermediateCatchEvent_06v4wlm" />
   </bpmn:collaboration>
-  <bpmn:process id="Process_A_business_key" isExecutable="true">
+  <bpmn:process id="Process_A_callback" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1" name="Process A&#10;started">
       <bpmn:extensionElements>
         <camunda:formData businessKey="businessKey">
@@ -27,7 +27,7 @@
     </bpmn:intermediateCatchEvent>
     <bpmn:endEvent id="EndEvent_0h4ry7z" name="Process A ended">
       <bpmn:incoming>SequenceFlow_1go2k2f</bpmn:incoming>
-      <bpmn:messageEventDefinition camunda:expression="${runtimeService.createMessageCorrelation(&#34;Message_A_ended_business_key&#34;).processInstanceBusinessKey(execution.getBusinessKey()).setVariables(execution.getVariables()).correlateWithResult()}" />
+      <bpmn:messageEventDefinition camunda:expression="${runtimeService.createMessageCorrelation(&#34;Message_A_ended_callback&#34;).processInstanceBusinessKey(execution.getBusinessKey()).setVariables(execution.getVariables()).correlateWithResult()}" />
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1go2k2f" sourceRef="Task_153wbtr" targetRef="EndEvent_0h4ry7z" />
     <bpmn:userTask id="Task_153wbtr" name="Do some work" camunda:assignee="demo" camunda:candidateUsers="demo">
@@ -45,12 +45,12 @@
       <bpmn:incoming>SequenceFlow_1llwxds</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1go2k2f</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sendTask id="Task_1x43n2c" name="Send a message" camunda:expression="${runtimeService.createMessageCorrelation(&#34;Message_A_B_business_key&#34;).processInstanceBusinessKey(execution.getBusinessKey()).setVariables(execution.getVariables()).correlateWithResult()}">
+    <bpmn:sendTask id="Task_1x43n2c" name="Send a message" camunda:expression="${runtimeService.createMessageCorrelation(&#34;Message_A_B_callback&#34;).processInstanceBusinessKey(execution.getBusinessKey()).setVariables(execution.getVariables()).correlateWithResult()}">
       <bpmn:incoming>SequenceFlow_1yg5p13</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0pv4voa</bpmn:outgoing>
     </bpmn:sendTask>
   </bpmn:process>
-  <bpmn:process id="Process_B_business_key" isExecutable="true">
+  <bpmn:process id="Process_B_callback" isExecutable="true">
     <bpmn:userTask id="Task_04cdz66" name="Do some work" camunda:assignee="demo" camunda:candidateUsers="demo">
       <bpmn:extensionElements>
         <camunda:formData>
@@ -88,7 +88,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_1oif5dv" sourceRef="Task_0zfp4k4" targetRef="IntermediateCatchEvent_06v4wlm" />
     <bpmn:sequenceFlow id="SequenceFlow_1e6hepi" sourceRef="IntermediateCatchEvent_06v4wlm" targetRef="Task_0qbdhwq" />
     <bpmn:sequenceFlow id="SequenceFlow_1529d57" sourceRef="Task_0qbdhwq" targetRef="EndEvent_0b7uv5t" />
-    <bpmn:sendTask id="Task_0zfp4k4" name="Send a message" camunda:expression="${runtimeService.createMessageCorrelation(&#34;Message_B_A_business_key&#34;).processInstanceBusinessKey(execution.getBusinessKey()).setVariables(execution.getVariables()).correlateWithResult()}">
+    <bpmn:sendTask id="Task_0zfp4k4" name="Send a message" camunda:expression="${runtimeService.createMessageCorrelation(&#34;Message_B_A_callback&#34;).processInstanceBusinessKey(execution.getBusinessKey()).setVariables(execution.getVariables()).correlateWithResult()}">
       <bpmn:incoming>SequenceFlow_0qh38jg</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1oif5dv</bpmn:outgoing>
     </bpmn:sendTask>
@@ -108,9 +108,9 @@
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1d296bs" sourceRef="StartEvent_0l49vh0" targetRef="Task_04cdz66" />
   </bpmn:process>
-  <bpmn:message id="Message_135sw9c" name="Message_A_B_business_key" />
-  <bpmn:message id="Message_0j4pij7" name="Message_B_A_business_key" />
-  <bpmn:message id="Message_1vf2ht9" name="Message_A_ended_business_key" />
+  <bpmn:message id="Message_135sw9c" name="Message_A_B_callback" />
+  <bpmn:message id="Message_0j4pij7" name="Message_B_A_callback" />
+  <bpmn:message id="Message_1vf2ht9" name="Message_A_ended_callback" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_12zap17">
       <bpmndi:BPMNShape id="Participant_1wadqwr_di" bpmnElement="Participant_1wadqwr">

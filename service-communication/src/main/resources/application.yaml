@@ -15,6 +15,20 @@ spring:
     url: jdbc:h2:file:./data/camunda
     username: sa
     password: sa
+  cloud:
+    stream:
+      bindings:
+        output:
+          destination: digibp-retail
+          content-type: application/json
+        input:
+          destination: digibp-retail
+          content-type: application/json
+      default-binder: kafka
+      kafka:
+        binder:
+          zkNodes: localhost:2181
+          brokers: localhost:9092
 ## Uncomment the following lines to enable the h2 DB console:
 #  h2:
 #    console:

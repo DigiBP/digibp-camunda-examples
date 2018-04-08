@@ -8,8 +8,6 @@ package ch.fhnw.digibp.examples.message;
 import java.io.IOException;
 
 import ch.fhnw.digibp.examples.api.ChoreographyEndpoints;
-import ch.fhnw.digibp.examples.message.Message;
-import ch.fhnw.digibp.examples.message.MessageSender;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
