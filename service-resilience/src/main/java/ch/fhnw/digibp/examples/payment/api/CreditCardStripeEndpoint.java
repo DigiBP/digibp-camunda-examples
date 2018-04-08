@@ -89,7 +89,7 @@ public class CreditCardStripeEndpoint {
 
         ChargeResponse response = new ChargeResponse();
 
-        if (Math.random() > 0.7d) {
+        if (Math.random() > 0.3d) {
             response.errorCode = "credit card expired";
             logger.info(response.errorCode);
             return response;

@@ -7,6 +7,7 @@ package ch.fhnw.digibp.examples.service;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,23 @@ public class ChargeCreditCardAdapter {
                 return rest.postForObject(chargeWaitUrl,request,ChargeResponse.class);
             }
         }.execute();
+
+        execution.setVariable("paymentTransactionId", response.transactionId);
+    }
+
+    public void chargeWithCircuitBreakerError(DelegateExecution execution){
+        ChargeRequest request = new ChargeRequest();
+        request.amount = Long.parseLong((String) execution.getVariable("amount"));
+        ChargeResponse response = null;
+        try {
+            response = new HystrixCommand<ChargeResponse>(HystrixCommandGroupKey.Factory.asKey("chargeWait"), 5 * 1000) {
+                protected ChargeResponse run() throws Exception {
+                    return rest.postForObject(chargeWaitUrl, request, ChargeResponse.class);
+                }
+            }.execute();
+        } catch (Exception e) {
+            throw new BpmnError("CreditCardChargeError", "Timeout");
+        }
 
         execution.setVariable("paymentTransactionId", response.transactionId);
     }
