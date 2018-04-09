@@ -5,9 +5,9 @@
   <bpmn:message id="Message_03z4dfb" name="Msg_CreditCardUpdated" />
   <bpmn:message id="Message_11e9vuz" name="RetrievePaymentCommand" />
   <bpmn:collaboration id="Collaboration_1vyu71a">
-    <bpmn:participant id="Participant_1uj14wd" name="Payment" processRef="payment-charge-error-compensation" />
+    <bpmn:participant id="Participant_1uj14wd" name="Payment" processRef="payment-charge-error-compensation-escalation" />
   </bpmn:collaboration>
-  <bpmn:process id="payment-charge-error-compensation" name="payment-charge-error-compensation" isExecutable="true">
+  <bpmn:process id="payment-charge-error-compensation-escalation" name="payment-charge-error-compensation-escalation" isExecutable="true">
     <bpmn:laneSet />
     <bpmn:userTask id="Task_1it4opi" name="Do some work" camunda:assignee="demo" camunda:candidateUsers="demo">
       <bpmn:incoming>SequenceFlow_1dcj2sc</bpmn:incoming>
@@ -50,14 +50,12 @@ statusCode;]]></camunda:script>
     <bpmn:sequenceFlow id="SequenceFlow_0hwhl21" name="No" sourceRef="Gateway_174hy3n" targetRef="ServiceTask_10hm6pn">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[${amount>0}]]></bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_1dcj2sc" sourceRef="Gateway_174hy3n" targetRef="Task_1it4opi">
+    <bpmn:sequenceFlow id="SequenceFlow_1dcj2sc" name="" sourceRef="Gateway_174hy3n" targetRef="Task_1it4opi">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${true}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1i5dz5k" sourceRef="Task_1it4opi" targetRef="Gateway_1lc63xo" />
-    <bpmn:sequenceFlow id="SequenceFlow_1bl5zkm" sourceRef="BoundaryEvent_1lt152w" targetRef="Task_0aqxl1l" />
-    <bpmn:sequenceFlow id="SequenceFlow_0bp50zo" sourceRef="Task_0aqxl1l" targetRef="IntermediateThrowEvent_0zdm25k" />
     <bpmn:boundaryEvent id="BoundaryEvent_1lt152w" name="Charge failed" attachedToRef="ServiceTask_10hm6pn">
-      <bpmn:outgoing>SequenceFlow_1bl5zkm</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0h3q34w</bpmn:outgoing>
       <bpmn:errorEventDefinition errorRef="Error_01heytq" camunda:errorMessageVariable="errorMessage" />
     </bpmn:boundaryEvent>
     <bpmn:startEvent id="StartEvent_1" name="Payment requested">
@@ -78,33 +76,45 @@ statusCode;]]></camunda:script>
       <bpmn:compensateEventDefinition />
     </bpmn:boundaryEvent>
     <bpmn:serviceTask id="Task_0qtja1e" name="Restore customer credit" isForCompensation="true" camunda:expression="${chargeCreditCardAdapter.customerCreditRefund(execution)}" />
-    <bpmn:sequenceFlow id="SequenceFlow_0c6fg0y" sourceRef="IntermediateThrowEvent_0zdm25k" targetRef="EndEvent_0mo5wvn" />
-    <bpmn:userTask id="Task_0aqxl1l" name="Try to refund (if charged)" camunda:assignee="demo" camunda:candidateUsers="demo">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="amount" label="Amount" type="string" />
-          <camunda:formField id="errorMessage" label="Error Message" type="string">
-            <camunda:validation>
-              <camunda:constraint name="readonly" config="true" />
-            </camunda:validation>
-          </camunda:formField>
-        </camunda:formData>
-      </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_1bl5zkm</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0bp50zo</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:endEvent id="EndEvent_0mo5wvn" name="Payment restored">
-      <bpmn:incoming>SequenceFlow_0c6fg0y</bpmn:incoming>
-      <bpmn:terminateEventDefinition />
-    </bpmn:endEvent>
     <bpmn:endEvent id="EndEvent_0769is9" name="Payment received">
       <bpmn:incoming>SequenceFlow_1vxbsh3</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_0zdm25k" name="Payment failed">
-      <bpmn:incoming>SequenceFlow_0bp50zo</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0c6fg0y</bpmn:outgoing>
-      <bpmn:compensateEventDefinition />
-    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0h3q34w" sourceRef="BoundaryEvent_1lt152w" targetRef="EndEvent_19ps335" />
+    <bpmn:endEvent id="EndEvent_19ps335" name="Not chargeable">
+      <bpmn:incoming>SequenceFlow_0h3q34w</bpmn:incoming>
+      <bpmn:escalationEventDefinition escalationRef="Escalation_1h16g8f" />
+    </bpmn:endEvent>
+    <bpmn:subProcess id="SubProcess_19mcb65" name="Refund everthing" triggeredByEvent="true">
+      <bpmn:userTask id="Task_0aqxl1l" name="Try to refund (if charged)" camunda:assignee="demo" camunda:candidateUsers="demo">
+        <bpmn:extensionElements>
+          <camunda:formData>
+            <camunda:formField id="amount" label="Amount" type="string" />
+            <camunda:formField id="errorMessage" label="Error Message" type="string">
+              <camunda:validation>
+                <camunda:constraint name="readonly" config="true" />
+              </camunda:validation>
+            </camunda:formField>
+          </camunda:formData>
+        </bpmn:extensionElements>
+        <bpmn:incoming>SequenceFlow_122klg9</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_0bp50zo</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:intermediateThrowEvent id="IntermediateThrowEvent_0zdm25k" name="Payment failed">
+        <bpmn:incoming>SequenceFlow_0bp50zo</bpmn:incoming>
+        <bpmn:outgoing>SequenceFlow_0c6fg0y</bpmn:outgoing>
+        <bpmn:compensateEventDefinition activityRef="Task_1y6j7rf" />
+      </bpmn:intermediateThrowEvent>
+      <bpmn:sequenceFlow id="SequenceFlow_0bp50zo" sourceRef="Task_0aqxl1l" targetRef="IntermediateThrowEvent_0zdm25k" />
+      <bpmn:sequenceFlow id="SequenceFlow_0c6fg0y" sourceRef="IntermediateThrowEvent_0zdm25k" targetRef="EndEvent_0mo5wvn" />
+      <bpmn:sequenceFlow id="SequenceFlow_122klg9" sourceRef="StartEvent_0ur1opd" targetRef="Task_0aqxl1l" />
+      <bpmn:endEvent id="EndEvent_0mo5wvn" name="Payment restored">
+        <bpmn:incoming>SequenceFlow_0c6fg0y</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:startEvent id="StartEvent_0ur1opd" name="Not chargeable">
+        <bpmn:outgoing>SequenceFlow_122klg9</bpmn:outgoing>
+        <bpmn:escalationEventDefinition escalationRef="Escalation_1h16g8f" />
+      </bpmn:startEvent>
+    </bpmn:subProcess>
     <bpmn:inclusiveGateway id="Gateway_174hy3n" name="Payment complete?">
       <bpmn:incoming>SequenceFlow_0tp86fl</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0hwhl21</bpmn:outgoing>
@@ -120,10 +130,11 @@ statusCode;]]></camunda:script>
   <bpmn:message id="Message_0j8qdv1" name="Message_charging_requested" />
   <bpmn:message id="Message_0k71thb" name="Message_card_charged" />
   <bpmn:error id="Error_01heytq" name="CreditCardFailedError" errorCode="CreditCardChargeError" />
+  <bpmn:escalation id="Escalation_1h16g8f" name="Escalation_3lsr1cm" escalationCode="Escalation requested" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1vyu71a">
       <bpmndi:BPMNShape id="Participant_1uj14wd_di" bpmnElement="Participant_1uj14wd">
-        <dc:Bounds x="140" y="85" width="819" height="339" />
+        <dc:Bounds x="140" y="85" width="827" height="494" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="StartEvent_0htyixt_di" bpmnElement="StartEvent_1">
         <dc:Bounds x="204" y="220" width="36" height="36" />
@@ -188,23 +199,8 @@ statusCode;]]></camunda:script>
         <dc:Bounds x="542" y="105" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="UserTask_1vpqp0m_di" bpmnElement="Task_0aqxl1l">
-        <dc:Bounds x="647" y="324" width="100" height="80" />
+        <dc:Bounds x="492" y="458" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_1bl5zkm_di" bpmnElement="SequenceFlow_1bl5zkm">
-        <di:waypoint x="618" y="296" />
-        <di:waypoint x="618" y="364" />
-        <di:waypoint x="647" y="364" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="588" y="324" width="90" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0bp50zo_di" bpmnElement="SequenceFlow_0bp50zo">
-        <di:waypoint x="747" y="364" />
-        <di:waypoint x="790" y="364" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="723.5" y="343" width="90" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="BoundaryEvent_14wm8zy_di" bpmnElement="BoundaryEvent_1lt152w">
         <dc:Bounds x="600" y="260" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -224,7 +220,7 @@ statusCode;]]></camunda:script>
       <bpmndi:BPMNShape id="BoundaryEvent_19ur9ft_di" bpmnElement="BoundaryEvent_1n8ese5">
         <dc:Bounds x="339" y="260" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="380" y="286" width="71" height="12" />
+          <dc:Bounds x="380" y="283" width="71" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_1s5vzin_di" bpmnElement="Association_1s5vzin">
@@ -236,31 +232,68 @@ statusCode;]]></camunda:script>
         <dc:Bounds x="380" y="324" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0c6fg0y_di" bpmnElement="SequenceFlow_0c6fg0y">
-        <di:waypoint x="826" y="364" />
-        <di:waypoint x="884" y="364" />
+        <di:waypoint x="671" y="498" />
+        <di:waypoint x="739" y="498" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="855" y="343" width="0" height="12" />
+          <dc:Bounds x="660" y="477" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="IntermediateThrowEvent_0niw5zr_di" bpmnElement="IntermediateThrowEvent_0zdm25k">
-        <dc:Bounds x="790" y="346" width="36" height="36" />
+        <dc:Bounds x="635" y="480" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="774" y="386" width="71" height="12" />
+          <dc:Bounds x="619" y="520" width="71" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="EndEvent_02ismu3_di" bpmnElement="EndEvent_0mo5wvn">
-        <dc:Bounds x="884" y="346" width="36" height="36" />
+      <bpmndi:BPMNShape id="SubProcess_1bg8qks_di" bpmnElement="SubProcess_19mcb65" isExpanded="true">
+        <dc:Bounds x="376" y="432" width="432" height="127" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0bp50zo_di" bpmnElement="SequenceFlow_0bp50zo">
+        <di:waypoint x="592" y="498" />
+        <di:waypoint x="635" y="498" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="859" y="386" width="87" height="12" />
+          <dc:Bounds x="569" y="477" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0h3q34w_di" bpmnElement="SequenceFlow_0h3q34w">
+        <di:waypoint x="618" y="296" />
+        <di:waypoint x="618" y="355" />
+        <di:waypoint x="652" y="355" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="633" y="319.5" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_122klg9_di" bpmnElement="SequenceFlow_122klg9">
+        <di:waypoint x="445" y="498" />
+        <di:waypoint x="492" y="498" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="424" y="477" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1incl5h_di" bpmnElement="EndEvent_0mo5wvn">
+        <dc:Bounds x="739" y="480" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="714" y="520" width="87" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="InclusiveGateway_0v5bqza_di" bpmnElement="Gateway_174hy3n">
+      <bpmndi:BPMNShape id="EndEvent_1pd8knb_di" bpmnElement="EndEvent_19ps335">
+        <dc:Bounds x="652" y="337" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="633" y="377" width="74" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1mcjdrl_di" bpmnElement="StartEvent_0ur1opd">
+        <dc:Bounds x="409" y="480" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="390" y="520" width="74" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="InclusiveGateway_1kpdkj6_di" bpmnElement="Gateway_174hy3n">
         <dc:Bounds x="434" y="213" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="471" y="251" width="50" height="24" />
+          <dc:Bounds x="472" y="252" width="50" height="24" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="InclusiveGateway_1p21cul_di" bpmnElement="Gateway_1lc63xo">
+      <bpmndi:BPMNShape id="InclusiveGateway_108ywpv_di" bpmnElement="Gateway_1lc63xo">
         <dc:Bounds x="700" y="213" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="635" y="273" width="0" height="12" />

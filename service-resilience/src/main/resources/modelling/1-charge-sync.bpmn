@@ -6,6 +6,9 @@
   <bpmn:message id="Message_11e9vuz" name="RetrievePaymentCommand" />
   <bpmn:collaboration id="Collaboration_1vyu71a">
     <bpmn:participant id="Participant_1uj14wd" name="Payment" processRef="payment-charge-sync" />
+    <bpmn:participant id="Participant_09o6lei" name="Credit Card Service" />
+    <bpmn:messageFlow id="MessageFlow_1mogzsg" sourceRef="ServiceTask_10hm6pn" targetRef="Participant_09o6lei" />
+    <bpmn:messageFlow id="MessageFlow_10dk39z" sourceRef="Participant_09o6lei" targetRef="ServiceTask_10hm6pn" />
   </bpmn:collaboration>
   <bpmn:process id="payment-charge-sync" name="payment-charge-sync" isExecutable="true">
     <bpmn:laneSet />
@@ -154,6 +157,23 @@ header;]]></camunda:script>
       <bpmndi:BPMNEdge id="Association_0b8uibn_di" bpmnElement="Association_0b8uibn">
         <di:waypoint x="642" y="257" />
         <di:waypoint x="713" y="285" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_0dzpp8l_di" bpmnElement="Participant_09o6lei">
+        <dc:Bounds x="438" y="377" width="300" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_1mogzsg_di" bpmnElement="MessageFlow_1mogzsg">
+        <di:waypoint x="568" y="278" />
+        <di:waypoint x="568" y="377" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="583" y="321.5" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_10dk39z_di" bpmnElement="MessageFlow_10dk39z">
+        <di:waypoint x="618" y="377" />
+        <di:waypoint x="618" y="278" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="633" y="321.5" width="0" height="12" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -47,19 +47,13 @@ statusCode;]]></camunda:script>
     <bpmn:sequenceFlow id="SequenceFlow_1x5dcf0" sourceRef="ServiceTask_10hm6pn" targetRef="Gateway_1lc63xo" />
     <bpmn:sequenceFlow id="SequenceFlow_0yywoto" sourceRef="StartEvent_1" targetRef="Task_1y6j7rf" />
     <bpmn:sequenceFlow id="SequenceFlow_1vxbsh3" sourceRef="Gateway_1lc63xo" targetRef="EndEvent_0769is9" />
-    <bpmn:sequenceFlow id="SequenceFlow_0hwhl21" sourceRef="Gateway_174hy3n" targetRef="ServiceTask_10hm6pn" />
-    <bpmn:sequenceFlow id="SequenceFlow_1dcj2sc" sourceRef="Gateway_174hy3n" targetRef="Task_1it4opi" />
+    <bpmn:sequenceFlow id="SequenceFlow_0hwhl21" name="No" sourceRef="Gateway_174hy3n" targetRef="ServiceTask_10hm6pn">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[${amount>0}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1dcj2sc" sourceRef="Gateway_174hy3n" targetRef="Task_1it4opi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1i5dz5k" sourceRef="Task_1it4opi" targetRef="Gateway_1lc63xo" />
-    <bpmn:parallelGateway id="Gateway_174hy3n">
-      <bpmn:incoming>SequenceFlow_0tp86fl</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0hwhl21</bpmn:outgoing>
-      <bpmn:outgoing>SequenceFlow_1dcj2sc</bpmn:outgoing>
-    </bpmn:parallelGateway>
-    <bpmn:parallelGateway id="Gateway_1lc63xo">
-      <bpmn:incoming>SequenceFlow_1x5dcf0</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_1i5dz5k</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1vxbsh3</bpmn:outgoing>
-    </bpmn:parallelGateway>
     <bpmn:userTask id="Task_0aqxl1l" name="Try to refund (if charged)" camunda:assignee="demo" camunda:candidateUsers="demo">
       <bpmn:extensionElements>
         <camunda:formData>
@@ -101,6 +95,16 @@ statusCode;]]></camunda:script>
       <bpmn:incoming>SequenceFlow_0bp50zo</bpmn:incoming>
       <bpmn:terminateEventDefinition />
     </bpmn:endEvent>
+    <bpmn:inclusiveGateway id="Gateway_1lc63xo">
+      <bpmn:incoming>SequenceFlow_1x5dcf0</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1i5dz5k</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1vxbsh3</bpmn:outgoing>
+    </bpmn:inclusiveGateway>
+    <bpmn:inclusiveGateway id="Gateway_174hy3n" name="Payment complete?">
+      <bpmn:incoming>SequenceFlow_0tp86fl</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0hwhl21</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1dcj2sc</bpmn:outgoing>
+    </bpmn:inclusiveGateway>
   </bpmn:process>
   <bpmn:message id="Message_0j8qdv1" name="Message_charging_requested" />
   <bpmn:message id="Message_0k71thb" name="Message_card_charged" />
@@ -172,18 +176,6 @@ statusCode;]]></camunda:script>
       <bpmndi:BPMNShape id="UserTask_0dviexe_di" bpmnElement="Task_1it4opi">
         <dc:Bounds x="542" y="105" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ParallelGateway_1wg541x_di" bpmnElement="Gateway_174hy3n">
-        <dc:Bounds x="434" y="213" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="434" y="264" width="50" height="24" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ParallelGateway_1l1liju_di" bpmnElement="Gateway_1lc63xo">
-        <dc:Bounds x="700" y="213" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="680" y="273" width="0" height="12" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="UserTask_1vpqp0m_di" bpmnElement="Task_0aqxl1l">
         <dc:Bounds x="647" y="324" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -212,7 +204,7 @@ statusCode;]]></camunda:script>
         <di:waypoint x="386" y="238" />
         <di:waypoint x="434" y="238" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="410" y="217" width="0" height="12" />
+          <dc:Bounds x="365" y="217" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_118x6o7_di" bpmnElement="Task_1y6j7rf">
@@ -222,6 +214,18 @@ statusCode;]]></camunda:script>
         <dc:Bounds x="795" y="346" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="778" y="386" width="71" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="InclusiveGateway_00pqayr_di" bpmnElement="Gateway_1lc63xo">
+        <dc:Bounds x="700" y="213" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="635" y="273" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="InclusiveGateway_0lrq6p0_di" bpmnElement="Gateway_174hy3n">
+        <dc:Bounds x="434" y="213" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="475" y="252" width="50" height="24" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
