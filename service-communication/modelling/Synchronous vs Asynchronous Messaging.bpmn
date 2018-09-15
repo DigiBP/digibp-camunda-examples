@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_0pamf67" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.1">
+  <bpmn:collaboration id="Collaboration_0ng0e61">
+    <bpmn:participant id="Participant_0belw76" processRef="Process_1" />
+    <bpmn:participant id="Participant_1xhfhrq" processRef="Process_1oygo7e" />
+    <bpmn:participant id="Participant_0ycpwli" processRef="Process_020yr6u" />
+    <bpmn:participant id="Participant_1fyuoo0" processRef="Process_1sfowbj" />
+    <bpmn:participant id="Participant_0fhf8oc" name="Enterprise Service Bus, Message Bus or Message Broker" />
+    <bpmn:messageFlow id="MessageFlow_0xojs4k" sourceRef="Task_09yrb51" targetRef="Participant_0fhf8oc" />
+    <bpmn:messageFlow id="MessageFlow_1jwirro" sourceRef="Participant_0fhf8oc" targetRef="Task_09yrb51" />
+    <bpmn:messageFlow id="MessageFlow_1qsxrrs" sourceRef="ServiceTask_03thjsp" targetRef="Participant_0fhf8oc" />
+    <bpmn:messageFlow id="MessageFlow_08u2si8" sourceRef="Participant_0fhf8oc" targetRef="Task_0eqj9g7" />
+    <bpmn:messageFlow id="MessageFlow_0iv5d07" sourceRef="Participant_0fhf8oc" targetRef="Task_0516y64" />
+    <bpmn:messageFlow id="MessageFlow_0jusqnt" sourceRef="Task_0516y64" targetRef="Participant_0fhf8oc" />
+    <bpmn:messageFlow id="MessageFlow_0gbxquz" sourceRef="Participant_0fhf8oc" targetRef="ServiceTask_0hjfi64" />
+    <bpmn:messageFlow id="MessageFlow_16jk32l" sourceRef="ServiceTask_0hjfi64" targetRef="Participant_0fhf8oc" />
+    <bpmn:textAnnotation id="TextAnnotation_114sfjj">
+      <bpmn:text>Synchronous Service Invocation</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_15trdrm">
+      <bpmn:text>Asynchronous Service Invocation</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_1jn98t1">
+      <bpmn:text>Synchronous Messaging</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1vpbr0d" sourceRef="Participant_0fhf8oc" targetRef="TextAnnotation_1jn98t1" />
+    <bpmn:textAnnotation id="TextAnnotation_1u1a4ho">
+      <bpmn:text>Asynchronous Messaging</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_01jy12k" sourceRef="Participant_0fhf8oc" targetRef="TextAnnotation_1u1a4ho" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:sequenceFlow id="SequenceFlow_17amuhj" sourceRef="StartEvent_1" targetRef="Task_09yrb51" />
+    <bpmn:sequenceFlow id="SequenceFlow_0dltidh" sourceRef="Task_09yrb51" targetRef="EndEvent_0rutfri" />
+    <bpmn:sendTask id="Task_09yrb51">
+      <bpmn:incoming>SequenceFlow_17amuhj</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0dltidh</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_17amuhj</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_0rutfri">
+      <bpmn:incoming>SequenceFlow_0dltidh</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:association id="Association_1jydkt8" sourceRef="Task_09yrb51" targetRef="TextAnnotation_114sfjj" />
+  </bpmn:process>
+  <bpmn:process id="Process_1oygo7e" isExecutable="false">
+    <bpmn:serviceTask id="Task_0516y64" />
+  </bpmn:process>
+  <bpmn:process id="Process_020yr6u" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_0mj7hsp">
+      <bpmn:outgoing>SequenceFlow_1gzk8l1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sendTask id="ServiceTask_03thjsp">
+      <bpmn:incoming>SequenceFlow_1gzk8l1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_08eldwu</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="EndEvent_0huvymu">
+      <bpmn:incoming>SequenceFlow_06vz4wy</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:receiveTask id="Task_0eqj9g7">
+      <bpmn:incoming>SequenceFlow_08eldwu</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_06vz4wy</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1gzk8l1" sourceRef="StartEvent_0mj7hsp" targetRef="ServiceTask_03thjsp" />
+    <bpmn:sequenceFlow id="SequenceFlow_08eldwu" sourceRef="ServiceTask_03thjsp" targetRef="Task_0eqj9g7" />
+    <bpmn:sequenceFlow id="SequenceFlow_06vz4wy" sourceRef="Task_0eqj9g7" targetRef="EndEvent_0huvymu" />
+    <bpmn:association id="Association_1ybxchb" sourceRef="ServiceTask_03thjsp" targetRef="TextAnnotation_15trdrm" />
+  </bpmn:process>
+  <bpmn:process id="Process_1sfowbj" isExecutable="false">
+    <bpmn:serviceTask id="ServiceTask_0hjfi64" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0ng0e61">
+      <bpmndi:BPMNShape id="Participant_0belw76_di" bpmnElement="Participant_0belw76">
+        <dc:Bounds x="177" y="60" width="301" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="227" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_17amuhj_di" bpmnElement="SequenceFlow_17amuhj">
+        <di:waypoint x="263" y="120" />
+        <di:waypoint x="294" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0rutfri_di" bpmnElement="EndEvent_0rutfri">
+        <dc:Bounds x="422" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0dltidh_di" bpmnElement="SequenceFlow_0dltidh">
+        <di:waypoint x="394" y="120" />
+        <di:waypoint x="422" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_1xhfhrq_di" bpmnElement="Participant_1xhfhrq">
+        <dc:Bounds x="177" y="328" width="300" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0duq3zh_di" bpmnElement="Task_0516y64">
+        <dc:Bounds x="294" y="348" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_0xojs4k_di" bpmnElement="MessageFlow_0xojs4k" bioc:stroke="#43A047" bioc:fill="#C8E6C9">
+        <di:waypoint x="325" y="160" />
+        <di:waypoint x="325" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_1jwirro_di" bpmnElement="MessageFlow_1jwirro" bioc:stroke="#43A047" bioc:fill="#C8E6C9">
+        <di:waypoint x="365" y="225" />
+        <di:waypoint x="365" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_0ycpwli_di" bpmnElement="Participant_0ycpwli">
+        <dc:Bounds x="519" y="60" width="446" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0huvymu_di" bpmnElement="EndEvent_0huvymu">
+        <dc:Bounds x="888" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0mj7hsp_di" bpmnElement="StartEvent_0mj7hsp">
+        <dc:Bounds x="570" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1gzk8l1_di" bpmnElement="SequenceFlow_1gzk8l1">
+        <di:waypoint x="606" y="120" />
+        <di:waypoint x="629" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_08eldwu_di" bpmnElement="SequenceFlow_08eldwu">
+        <di:waypoint x="729" y="120" />
+        <di:waypoint x="757" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SendTask_1i7b1g4_di" bpmnElement="Task_09yrb51" bioc:stroke="#43A047" bioc:fill="#C8E6C9">
+        <dc:Bounds x="294" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SendTask_0m1hke4_di" bpmnElement="ServiceTask_03thjsp" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
+        <dc:Bounds x="629" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_06vz4wy_di" bpmnElement="SequenceFlow_06vz4wy">
+        <di:waypoint x="857" y="120" />
+        <di:waypoint x="888" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ReceiveTask_1ifpp3e_di" bpmnElement="Task_0eqj9g7">
+        <dc:Bounds x="757" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_1fyuoo0_di" bpmnElement="Participant_1fyuoo0">
+        <dc:Bounds x="519" y="328" width="444" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0hjfi64_di" bpmnElement="ServiceTask_0hjfi64">
+        <dc:Bounds x="697" y="348" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_1qsxrrs_di" bpmnElement="MessageFlow_1qsxrrs" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
+        <di:waypoint x="681" y="160" />
+        <di:waypoint x="682" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_08u2si8_di" bpmnElement="MessageFlow_08u2si8" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
+        <di:waypoint x="807" y="225" />
+        <di:waypoint x="807" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_1m8zhjd_di" bpmnElement="Participant_0fhf8oc" bioc:stroke="#FB8C00" bioc:fill="#FFE0B2">
+        <dc:Bounds x="177" y="225" width="788" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_0iv5d07_di" bpmnElement="MessageFlow_0iv5d07" bioc:stroke="#43A047" bioc:fill="#C8E6C9">
+        <di:waypoint x="327" y="285" />
+        <di:waypoint x="327" y="348" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_0jusqnt_di" bpmnElement="MessageFlow_0jusqnt" bioc:stroke="#43A047" bioc:fill="#C8E6C9">
+        <di:waypoint x="365" y="348" />
+        <di:waypoint x="365" y="285" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_0gbxquz_di" bpmnElement="MessageFlow_0gbxquz" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
+        <di:waypoint x="722" y="285" />
+        <di:waypoint x="722" y="348" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_16jk32l_di" bpmnElement="MessageFlow_16jk32l" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
+        <di:waypoint x="773" y="348" />
+        <di:waypoint x="773" y="285" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_114sfjj_di" bpmnElement="TextAnnotation_114sfjj" bioc:stroke="#43A047" bioc:fill="#C8E6C9">
+        <dc:Bounds x="377" y="14" width="188" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1jydkt8_di" bpmnElement="Association_1jydkt8" bioc:stroke="#43A047" bioc:fill="#C8E6C9">
+        <di:waypoint x="388" y="81" />
+        <di:waypoint x="449" y="44" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_15trdrm_di" bpmnElement="TextAnnotation_15trdrm" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
+        <dc:Bounds x="692" y="14" width="199" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1ybxchb_di" bpmnElement="Association_1ybxchb" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
+        <di:waypoint x="725" y="83" />
+        <di:waypoint x="773" y="44" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_1jn98t1_di" bpmnElement="TextAnnotation_1jn98t1" bioc:stroke="#43A047" bioc:fill="#C8E6C9">
+        <dc:Bounds x="378" y="186" width="143" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1vpbr0d_di" bpmnElement="Association_1vpbr0d" bioc:stroke="#43A047" bioc:fill="#C8E6C9">
+        <di:waypoint x="388" y="225" />
+        <di:waypoint x="411" y="216" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_1u1a4ho_di" bpmnElement="TextAnnotation_1u1a4ho" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
+        <dc:Bounds x="822" y="186" width="149" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_01jy12k_di" bpmnElement="Association_01jy12k" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
+        <di:waypoint x="847" y="225" />
+        <di:waypoint x="865" y="216" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
