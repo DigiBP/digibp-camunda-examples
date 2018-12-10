@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:flowable="http://flowable.org/cmmn" targetNamespace="http://www.flowable.org/casedef" exporter="Camunda Modeler" exporterVersion="2.2.3">
+  <case id="taskTypes" name="Task-Types" flowable:initiatorVariableName="initiator">
+    <casePlanModel id="casePlanModel" name="Task-Types (Camuda OSS)">
+      <planItem id="planItem1" name="Task" definitionRef="sid-9587713A-308F-472D-BD66-67EF0B64FD59" />
+      <planItem id="planItem2" name="Human Task" definitionRef="sid-BEA7923E-0C6A-49AB-8F3E-754482447E90" />
+      <planItem id="planItem3" name="Decision Task" definitionRef="sid-1CEB2726-3B90-41AC-9157-AC91FFA5D845" />
+      <planItem id="planItem4" name="Process Task" definitionRef="sid-78808972-A63E-4560-AA9E-9FD7AC61D040" />
+      <planItem id="planItem5" name="Case Task" definitionRef="sid-E126E083-2951-4D1C-9CD3-3957CCE8D6DB" />
+      <task id="sid-9587713A-308F-472D-BD66-67EF0B64FD59" name="Task" />
+      <humanTask id="sid-BEA7923E-0C6A-49AB-8F3E-754482447E90" name="Human Task" />
+      <decisionTask id="sid-1CEB2726-3B90-41AC-9157-AC91FFA5D845" name="Decision Task" isBlocking="false">
+        <extensionElements>
+          <flowable:field name="decisionTaskThrowErrorOnNoHits">
+            <flowable:string>false</flowable:string>
+          </flowable:field>
+        </extensionElements>
+      </decisionTask>
+      <processTask id="sid-78808972-A63E-4560-AA9E-9FD7AC61D040" name="Process Task" />
+      <caseTask id="sid-E126E083-2951-4D1C-9CD3-3957CCE8D6DB" name="Case Task" />
+    </casePlanModel>
+  </case>
+  <cmmndi:CMMNDI>
+    <cmmndi:CMMNDiagram id="CMMNDiagram_taskTypes">
+      <cmmndi:CMMNShape id="CMMNShape_casePlanModel" cmmnElementRef="casePlanModel">
+        <dc:Bounds x="40" y="40" width="769" height="160" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CMMNShape_planItem1" cmmnElementRef="planItem1">
+        <dc:Bounds x="75" y="84" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CMMNShape_planItem2" cmmnElementRef="planItem2">
+        <dc:Bounds x="225" y="84" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CMMNShape_planItem3" cmmnElementRef="planItem3">
+        <dc:Bounds x="675" y="84" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CMMNShape_planItem4" cmmnElementRef="planItem4">
+        <dc:Bounds x="375" y="84" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CMMNShape_planItem5" cmmnElementRef="planItem5">
+        <dc:Bounds x="525" y="84" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+    </cmmndi:CMMNDiagram>
+  </cmmndi:CMMNDI>
+</definitions>
