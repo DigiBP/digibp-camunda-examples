@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.12.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.3">
   <bpmn:collaboration id="Collaboration_0za6fu4">
     <bpmn:participant id="Participant_11mgy9y" name="Checkout" processRef="message-orchestration-checkout" />
     <bpmn:participant id="Participant_0mo5zaa" name="Order" processRef="message-orchestration-order" />
@@ -8,8 +8,8 @@
     <bpmn:participant id="Participant_0bw64aj" name="Inventory" processRef="Process_0u2mfsy" />
     <bpmn:participant id="Participant_1iovc09" name="Shipment" processRef="Process_1rg3sd8" />
     <bpmn:messageFlow id="MessageFlow_06kppai" sourceRef="Task_11pgyh7" targetRef="StartEvent_1ys95ua" />
-    <bpmn:messageFlow id="MessageFlow_1f7hsxo" name="RetrievePayment" sourceRef="SendTask_1ngumwk" targetRef="Participant_15cilzp" />
-    <bpmn:messageFlow id="MessageFlow_0yn2to9" name="RetrievePayment" sourceRef="Participant_15cilzp" targetRef="ServiceTask_056sibk" />
+    <bpmn:messageFlow id="MessageFlow_1f7hsxo" name="RequestPayment" sourceRef="SendTask_1ngumwk" targetRef="Participant_15cilzp" />
+    <bpmn:messageFlow id="MessageFlow_0yn2to9" name="RequestPayment" sourceRef="Participant_15cilzp" targetRef="ServiceTask_056sibk" />
     <bpmn:messageFlow id="MessageFlow_10ph1gz" name="PaymentReceived" sourceRef="ServiceTask_056sibk" targetRef="Participant_15cilzp" />
     <bpmn:messageFlow id="MessageFlow_14vizcy" name="PaymentReceived" sourceRef="Participant_15cilzp" targetRef="ReceiveTask_0bindyt" />
     <bpmn:messageFlow id="MessageFlow_1bet3t6" name="FetchGoods" sourceRef="SendTask_0yzd9lx" targetRef="Participant_15cilzp" />
@@ -41,7 +41,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_09xhco1" sourceRef="Task_11pgyh7" targetRef="EndEvent_0a63vr7" />
   </bpmn:process>
   <bpmn:process id="message-orchestration-order" name="message-orchestration-order" isExecutable="true">
-    <bpmn:sendTask id="SendTask_1ngumwk" name="Retrieve payment" camunda:expression="#{orderAdapter.retrievePayment(execution)}">
+    <bpmn:sendTask id="SendTask_1ngumwk" name="Request payment" camunda:expression="#{orderAdapter.retrievePayment(execution)}">
       <bpmn:incoming>SequenceFlow_0687ng1</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1cm4pp6</bpmn:outgoing>
     </bpmn:sendTask>
@@ -126,7 +126,7 @@
     <bpmn:serviceTask id="ServiceTask_056sibk" name="Do payment" />
   </bpmn:process>
   <bpmn:process id="Process_0u2mfsy" isExecutable="false">
-    <bpmn:serviceTask id="ServiceTask_1bgo0p7" name="Do fetch goods" />
+    <bpmn:serviceTask id="ServiceTask_1bgo0p7" name="Fetch goods" />
   </bpmn:process>
   <bpmn:process id="Process_1rg3sd8" isExecutable="false">
     <bpmn:serviceTask id="ServiceTask_1fuspuo" name="Do shipping" />
@@ -355,14 +355,14 @@
         <di:waypoint x="340" y="354" />
         <di:waypoint x="340" y="545" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="249" y="502" width="85" height="12" />
+          <dc:Bounds x="249" y="502" width="86" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="MessageFlow_0yn2to9_di" bpmnElement="MessageFlow_0yn2to9">
         <di:waypoint x="414" y="605" />
         <di:waypoint x="414" y="685" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="322" y="637" width="85" height="12" />
+          <dc:Bounds x="322" y="637" width="86" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="MessageFlow_10ph1gz_di" bpmnElement="MessageFlow_10ph1gz">

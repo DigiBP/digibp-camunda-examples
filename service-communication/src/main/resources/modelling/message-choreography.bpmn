@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.12.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.0.3">
   <bpmn:collaboration id="Collaboration_14trqhl">
     <bpmn:participant id="Participant_1oh5xuu" name="Checkout" processRef="message-choreography-checkout" />
     <bpmn:participant id="Participant_0unmg0k" name="Message Queue or Broker (e.g. RabbitMQ or Kafka)" />
@@ -31,7 +31,7 @@
     <bpmn:serviceTask id="ServiceTask_0cx1um8" name="Do payment" />
   </bpmn:process>
   <bpmn:process id="Process_16d0tby" isExecutable="false">
-    <bpmn:serviceTask id="ServiceTask_1lfcxn7" name="Do fetch goods" />
+    <bpmn:serviceTask id="ServiceTask_1lfcxn7" name="Fetch goods" />
   </bpmn:process>
   <bpmn:process id="Process_0jlpo63" isExecutable="false">
     <bpmn:serviceTask id="ServiceTask_1mhcz9g" name="Do shipping" />

@@ -14,14 +14,22 @@
       <bpmn:outgoing>SequenceFlow_0tuv3hr</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:endEvent id="EndEvent_1u6qjao" name="Dokument&#10;erhalten">
-      <bpmn:incoming>SequenceFlow_18jn74v</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_03sofsc</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sendTask id="SendTaskDokumenteAnfordern" name="Dokumente anfordern" camunda:async="true" camunda:delegateExpression="${logger}">
       <bpmn:incoming>SequenceFlow_0tuv3hr</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_18jn74v</bpmn:outgoing>
     </bpmn:sendTask>
     <bpmn:sequenceFlow id="SequenceFlow_0tuv3hr" sourceRef="Task_1uvwgjr" targetRef="SendTaskDokumenteAnfordern" />
-    <bpmn:sequenceFlow id="SequenceFlow_18jn74v" sourceRef="SendTaskDokumenteAnfordern" targetRef="EndEvent_1u6qjao" />
+    <bpmn:sequenceFlow id="SequenceFlow_18jn74v" sourceRef="SendTaskDokumenteAnfordern" targetRef="IntermediateThrowEvent_1wwqpgz" />
+    <bpmn:sequenceFlow id="SequenceFlow_03sofsc" sourceRef="IntermediateThrowEvent_1wwqpgz" targetRef="EndEvent_1u6qjao" />
+    <bpmn:intermediateCatchEvent id="IntermediateThrowEvent_1wwqpgz" name="15 sec warten">
+      <bpmn:incoming>SequenceFlow_18jn74v</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_03sofsc</bpmn:outgoing>
+      <bpmn:timerEventDefinition>
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT15S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
   </bpmn:process>
   <bpmn:message id="Message_1" name="MSG_DOCUMENT_RECEIVED" />
   <bpmn:process id="Process_0nob2he" isExecutable="false">
@@ -174,8 +182,18 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_18jn74v_di" bpmnElement="SequenceFlow_18jn74v">
         <di:waypoint x="435" y="90" />
+        <di:waypoint x="544" y="90" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_03sofsc_di" bpmnElement="SequenceFlow_03sofsc">
+        <di:waypoint x="580" y="90" />
         <di:waypoint x="724" y="90" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_1pv3wll_di" bpmnElement="IntermediateThrowEvent_1wwqpgz">
+        <dc:Bounds x="544" y="72" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="529" y="115" width="69" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

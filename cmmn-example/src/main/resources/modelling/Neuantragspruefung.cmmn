@@ -20,7 +20,7 @@
         <cmmn:entryCriterion id="EntryCriterion_0mvso4r" sentryRef="Sentry_18i3fif" />
       </cmmn:planItem>
       <cmmn:sentry id="Sentry_1fi08g9">
-        <cmmn:planItemOnPart id="PlanItemOnPart_1tfx46w" sourceRef="Stage_ApplicationDecision">
+        <cmmn:planItemOnPart id="PlanItemOnPart_1tfx46w" name="" sourceRef="Stage_ApplicationDecision">
           <cmmn:standardEvent>complete</cmmn:standardEvent>
         </cmmn:planItemOnPart>
         <cmmn:ifPart id="IfPart_00snv5g">
@@ -192,7 +192,7 @@
         <di:waypoint x="424" y="171" />
         <di:waypoint x="465" y="171" />
         <cmmndi:CMMNLabel>
-          <dc:Bounds x="399.5" y="161" width="90" height="20" />
+          <dc:Bounds x="419" y="161" width="51" height="12" />
         </cmmndi:CMMNLabel>
       </cmmndi:CMMNEdge>
       <cmmndi:CMMNEdge id="PlanItemOnPart_1ezbvnv_di" cmmnElementRef="PlanItemOnPart_1ezbvnv" targetCMMNElementRef="EntryCriterion_02okz83" isStandardEventVisible="false">
