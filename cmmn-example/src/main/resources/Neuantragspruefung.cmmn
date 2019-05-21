@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cmmn:definitions xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/cmmn" id="Test" targetNamespace="http://bpmn.io/schema/cmmn" exporter="Camunda Modeler" exporterVersion="2.2.3">
+<cmmn:definitions xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/cmmn" id="Test" targetNamespace="http://bpmn.io/schema/cmmn" exporter="Camunda Modeler" exporterVersion="3.1.0">
   <cmmn:case id="neuantragspruefung" name="Neuantragsprüfung">
     <cmmn:casePlanModel id="CasePlanModel_1" name="Neuantragsprüfung" autoComplete="true">
       <cmmn:extensionElements />
@@ -76,12 +76,12 @@
             <camunda:in businessKey="#{execution.caseBusinessKey}" />
           </cmmn:extensionElements>
         </cmmn:processTask>
-        <cmmn:humanTask id="HumanTask_0gu1j4z" name="Antrag beurteilen [Gruppenleiter]" camunda:formKey="embedded:app:forms/antragBeurteilen.html" camunda:assignee="demo" />
-        <cmmn:humanTask id="HumanTask_0te6ifr" name="Antrag entscheiden" camunda:formKey="embedded:app:forms/antragEntscheiden.html" camunda:assignee="demo" camunda:candidateGroups="sachbearbeiter" camunda:dueDate="${dateTime().plusDays(1).toDate()}" />
+        <cmmn:humanTask id="HumanTask_0gu1j4z" name="Antrag beurteilen [Gruppenleiter]" camunda:formKey="embedded:deployment:antragBeurteilen.html" camunda:assignee="demo" />
+        <cmmn:humanTask id="HumanTask_0te6ifr" name="Antrag entscheiden" camunda:formKey="embedded:deployment:antragEntscheiden.html" camunda:assignee="demo" camunda:candidateGroups="sachbearbeiter" camunda:dueDate="${dateTime().plusDays(1).toDate()}" />
       </cmmn:stage>
       <cmmn:milestone id="Milestone_0m9td9c" name="Antrag abgelehnt" />
       <cmmn:milestone id="Milestone_19rxgfz" name="Antrag angenommen" />
-      <cmmn:humanTask id="HumanTask_17b9rwk" name="Entscheidung freigeben" camunda:formKey="embedded:app:forms/antragEntscheiden.html" />
+      <cmmn:humanTask id="HumanTask_17b9rwk" name="Entscheidung freigeben" camunda:formKey="embedded:deployment:antragEntscheiden.html" />
       <cmmn:milestone id="Milestone_1rgudlk" name="Antrag abgelehnt" />
       <cmmn:milestone id="Milestone_1xjt2yk" name="Antrag angenommen" />
     </cmmn:casePlanModel>
