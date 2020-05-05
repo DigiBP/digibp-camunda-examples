@@ -1,0 +1,151 @@
+{
+	"info": {
+		"_postman_id": "5891d067-38ac-4f37-96a3-c50c5c1dd095",
+		"name": "Camunda Rest API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Deployment",
+			"item": [
+				{
+					"name": "/deployment/create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "82cf0225-5ba1-431e-a15b-f35cb0d704db",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "deployment-name",
+									"value": "cmmn-example",
+									"type": "text"
+								},
+								{
+									"key": "enable-duplicate-filtering",
+									"value": "false",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "deploy-changed-only",
+									"value": "false",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "deployment-source",
+									"value": "REST",
+									"type": "text"
+								},
+								{
+									"key": "tenant-id",
+									"value": "My Tenant",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "Versicherungsneuantrag.bpmn",
+									"type": "file",
+									"src": ""
+								},
+								{
+									"key": "Risikopruefung.dmn",
+									"type": "file",
+									"src": ""
+								},
+								{
+									"key": "Neuantragspruefung.cmmn",
+									"type": "file",
+									"src": ""
+								},
+								{
+									"key": "Dokumentenanforderung.bpmn",
+									"type": "file",
+									"src": ""
+								},
+								{
+									"key": "antragStart.html",
+									"type": "file",
+									"src": ""
+								},
+								{
+									"key": "antragEntscheiden.html",
+									"type": "file",
+									"src": ""
+								},
+								{
+									"key": "antragBeurteilen.html",
+									"type": "file",
+									"src": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "https://digibp.herokuapp.com/rest/deployment/create",
+							"protocol": "https",
+							"host": [
+								"digibp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"rest",
+								"deployment",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "da698ea0-8cd8-4887-ad6f-011937327cce",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "45df7731-f786-4cb1-8ecf-60714fd94bd3",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "8c3c615a-1b11-4d22-a1f2-6e1eab867cd6",
+			"key": "camunda",
+			"value": "https://digibp-camunda.herokuapp.com/rest",
+			"type": "string"
+		}
+	]
+}

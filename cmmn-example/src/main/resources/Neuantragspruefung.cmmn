@@ -76,12 +76,12 @@
             <camunda:in businessKey="#{execution.caseBusinessKey}" />
           </cmmn:extensionElements>
         </cmmn:processTask>
-        <cmmn:humanTask id="HumanTask_0gu1j4z" name="Antrag beurteilen [Gruppenleiter]" camunda:formKey="embedded:deployment:antragBeurteilen.html" camunda:assignee="demo" />
-        <cmmn:humanTask id="HumanTask_0te6ifr" name="Antrag entscheiden" camunda:formKey="embedded:deployment:antragEntscheiden.html" camunda:assignee="demo" camunda:candidateGroups="sachbearbeiter" camunda:dueDate="${dateTime().plusDays(1).toDate()}" />
+        <cmmn:humanTask id="HumanTask_0gu1j4z" name="Antrag beurteilen [Gruppenleiter]" camunda:formKey="embedded:deployment:antragBeurteilen.html" camunda:candidateUsers="demo" camunda:candidateGroups="manager,engineer" />
+        <cmmn:humanTask id="HumanTask_0te6ifr" name="Antrag entscheiden" camunda:formKey="embedded:deployment:antragEntscheiden.html" camunda:candidateUsers="demo" camunda:candidateGroups="sachbearbeiter,assistant,engineer" camunda:dueDate="${dateTime().plusDays(1).toDate()}" />
       </cmmn:stage>
       <cmmn:milestone id="Milestone_0m9td9c" name="Antrag abgelehnt" />
       <cmmn:milestone id="Milestone_19rxgfz" name="Antrag angenommen" />
-      <cmmn:humanTask id="HumanTask_17b9rwk" name="Entscheidung freigeben" camunda:formKey="embedded:deployment:antragEntscheiden.html" />
+      <cmmn:humanTask id="HumanTask_17b9rwk" name="Entscheidung freigeben" camunda:formKey="embedded:deployment:antragEntscheiden.html" camunda:candidateGroups="manager,engineer" />
       <cmmn:milestone id="Milestone_1rgudlk" name="Antrag abgelehnt" />
       <cmmn:milestone id="Milestone_1xjt2yk" name="Antrag angenommen" />
     </cmmn:casePlanModel>
