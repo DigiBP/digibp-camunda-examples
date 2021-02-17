@@ -99,7 +99,7 @@
 							]
 						},
 						"url": {
-							"raw": "https://digibp.herokuapp.com/rest/deployment/create",
+							"raw": "https://digibp.herokuapp.com/engine-rest/deployment/create",
 							"protocol": "https",
 							"host": [
 								"digibp",
@@ -144,7 +144,7 @@
 		{
 			"id": "8c3c615a-1b11-4d22-a1f2-6e1eab867cd6",
 			"key": "camunda",
-			"value": "https://digibp-camunda.herokuapp.com/rest",
+			"value": "https://digibp-camunda.herokuapp.com/engine-rest",
 			"type": "string"
 		}
 	]
